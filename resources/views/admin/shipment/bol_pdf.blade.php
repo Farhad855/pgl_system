@@ -38,7 +38,7 @@
             <br class="no-print">
             <br class="no-print">
             <div class="col-md-7 col-md-offset-2" style="font-size: 18px; font-weight: bold;">
-                <img src="{{asset('img/logo.png')}}" width="100px" height="100px">&nbsp;&nbsp;&nbsp; PGL Bill of Lading / Shipping Instructions
+                <img src="{{asset('img/logo.png')}}" width="100px" height="100px">&nbsp;&nbsp;&nbsp; PGL Bill of Loading / Shipping Instructions
             </div>
             <div class="col-md-12">
                 <br class="no-print">

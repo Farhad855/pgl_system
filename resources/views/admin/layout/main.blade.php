@@ -180,16 +180,22 @@
 								<span class="s-text">Invoices</span>
 							</a>
 							<ul>
-								<li><a href="{{route('invoice_customer','5')}}">All
+								<li>
+									<a href="{{route('add_invoice_admin')}}">Add new</a>
+								</li>
+								<li><a href="{{route('invoice_admin','5')}}">All
 								<span class="tag tag-warning t_all_inv" style="float:right;">0</span>
 								</a></li>
-								<li><a href="{{route('invoice_customer','0')}}">Open
+								<li><a href="{{route('invoice_admin','4')}}">Pending
+									<span class="tag tag-warning t_pending_inv" style="float:right;">0</span></a>
+							   </li>
+								<li><a href="{{route('invoice_admin','0')}}">Open
 								<span class="tag tag-warning t_open_inv" style="float:right;">0</span>
 								</a></li>
-								<li><a href="{{route('invoice_customer','2')}}">Past Due
-								<span class="tag tag-warning t_pastdue_inv" style="float:right;">0</span>
+								<li><a href="{{route('invoice_admin','2')}}">Past Due
+								<span class="tag tag-warning t_past_due_inv" style="float:right;">0</span>
 								</a></li>
-								<li><a href="{{route('invoice_customer','3')}}">Paid 
+								<li><a href="{{route('invoice_admin','3')}}">Paid 
 								<span class="tag tag-warning t_paid_inv" style="float:right;">0</span>
 								</a></li>
 							</ul>
@@ -430,6 +436,7 @@
 	            	$('.t_open_inv').text(msg.openinvoice);
 	            	$('.t_past_due_inv').text(msg.pastdueinvoice);
 	            	$('.t_paid_inv').text(msg.paidinvoice);
+	            	$('.t_pending_inv').text(msg.pendinginvoice);
 	                
 	            });
 	            request.fail(function( jqXHR, textStatus ) {

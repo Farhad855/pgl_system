@@ -43,14 +43,14 @@
 					<tr id="searchBody">
 						<td><?=$id++; ?></td>
                             <td>
-                            	<a href="" class="btn btn-info btn-circle waves-effect waves-light"><span class="fa fa-pencil"></span>
+                            	<a href="{{route('edit_shipment',$item->id)}}" class="btn btn-info btn-circle waves-effect waves-light"><span class="fa fa-pencil"></span>
                             	</a>
                             </td>
                             <td>
-                            	<a target="_blank" href="{{route('bol_customer',$item->id)}}">BOL</a>
+                            	<a target="_blank" href="{{route('bol_admin',$item->id)}}">BOL</a>
                             </td>
                             <td>
-                            	<a href="{{url('dock_recepit',$item->id)}}">DR</a>
+                            	<a target="_blank" href="{{route('dock_recepit_admin',$item->id)}}">DR</a>
                             </td>
                             <td>
                               <?php
@@ -94,10 +94,10 @@
                             <td>{{$item->inv_number}}</td>
 							<td>{{$item->amount}}</td>
 							@if($status==1)
-							<td><a href="">RD</a></td>
+							<td><a target="_blank" href="{{route('release_document_admin',$item->id)}}">RD</a></td>
 							@endif
 							@if($status==10)
-                            <td><a href="{{url('custom_form',$item->id)}}" >Custom Form</a>
+                            <td><a target="_blank" class="btn btn-primary btn-sm btn-rounded" href="{{route('custom_form_admin',$item->id)}}" >C.F</a>
                             </td>
                             @endif
                             @if($status!=1 or $status!=2 or $status!=10)
@@ -107,7 +107,7 @@
                             <td><a href="" class="btn btn-warning btn-circle waves-effect waves-light"><span class="fa fa-trash"></span></a>
                             </td>
                             <td>
-                            	<a href="" class="btn btn-info btn-rounded">Duplicate</a>
+                            	<a href="{{route('duplicate_shipment',$item->id)}}" class="btn btn-info btn-rounded">Duplicate</a>
                             </td>
                             @endif
 

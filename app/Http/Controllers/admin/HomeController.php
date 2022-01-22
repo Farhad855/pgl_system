@@ -192,7 +192,7 @@ function shipment_summary(){
             $loadingshipments = DB::table('containers')
             ->select("containers.id","tbl_bases.container_id","containers.id as id")
             ->leftJoin('tbl_bases','tbl_bases.container_id','=','containers.id')
-            ->whereIn('containers.status',[0,3])
+            ->where('containers.status',0)
             ->where('port_loading','like', '%'.$locations.'%')
             ->groupBy('containers.id')
             ->get();
@@ -216,22 +216,22 @@ function shipment_summary(){
            $AllData.="<tr>";
             $AllData.="<th>".$loc->location. "</th>";
            $AllData.="<td style='text-align: center'>
-             <a href=" . url('shipment_base_location_and_status_customer',['loc'=>$loc->location,'status'=>0]).">".
+             <a href=" . route('shipment_admin',['0',$loc->location]).">".
                 $loadingshipment=count($loadingshipments);
             "</a> 
             </td>";
             $AllData.="<td style='text-align: center'>
-             <a href=" . url('shipment_base_location_and_status_customer',['loc'=>$loc->location,'status'=>1]).">".
+             <a href=" . route('shipment_admin',['1',$loc->location]).">".
                 $onthewayshipment=count($onthewayshipments);
              "</a> 
             </td>";
             $AllData.="<td style='text-align: center'>
-             <a href=" . url('shipment_base_location_and_status_customer',['loc'=>$loc->location,'status'=>2]).">".
+             <a href=" .route('shipment_admin',['2',$loc->location]) .">".
                 $arrivedshipment=count($arrivedshipments);
              "</a> 
             </td>";
             $AllData.="<td style='text-align: center'>
-             <a href=" . url('shipment_base_location_and_status_customer',['loc'=>$loc->location,'status'=>3]).">".
+             <a href=" . route('shipment_admin',['10',$loc->location]).">".
                 $totlas=$loadingshipment+ $onthewayshipment + $arrivedshipment;
              "</a> 
             </td>";
@@ -245,16 +245,16 @@ function shipment_summary(){
           $AllData.= "<th> Total </th>";
 
           $AllData.="<td style='text-align: center'>
-          <a href=" . route('shipment_customer','0').">". $totalAtloading; " </a>
+          <a href=" . route('shipment_admin',['0','10']).">". $totalAtloading; " </a>
           </td>";
           $AllData.="<td style='text-align: center'>
-          <a href=" . route('shipment_customer','1').">". $totalOntheway; " </a>
+          <a href=" . route('shipment_admin',['1','10']).">". $totalOntheway; " </a>
           </td>";
            $AllData.="<td style='text-align: center'>
-          <a href=" . route('shipment_customer','2').">". $totalArrived; " </a>
+          <a href=" . route('shipment_admin',['2','10']).">". $totalArrived; " </a>
           </td>";
           $AllData.="<td style='text-align: center'>
-          <a href=" . route('shipment_customer','5').">". $allTotal=$totalAtloading+$totalOntheway+$totalArrived; " </a>
+          <a href=" . route('shipment_admin',['10','10']).">". $allTotal=$totalAtloading+$totalOntheway+$totalArrived; " </a>
           </td>";
           $AllData.= "<br></tr>";
           echo json_encode($AllData);
@@ -310,21 +310,19 @@ function shipment_summary(){
         $allinvoice= $all_invoices=DB::table('pgl_invoices')->count(); 
 
         $openinvoice= $all_invoices=DB::table('pgl_invoices')
-        ->join('companies','pgl_invoices.company_id','companies.id')
-        ->join('customers','companies.id','customers.company_id')
-        ->where('pgl_invoices.status',0)
+        ->where('status',0)
         ->count(); 
 
          $pastdueinvoice= $all_invoices=DB::table('pgl_invoices')
-        ->join('companies','pgl_invoices.company_id','companies.id')
-        ->join('customers','companies.id','customers.company_id')
-        ->where('pgl_invoices.status',2)
+        ->where('status',2)
         ->count(); 
 
          $paidinvoice= $all_invoices=DB::table('pgl_invoices')
-        ->join('companies','pgl_invoices.company_id','companies.id')
-        ->join('customers','companies.id','customers.company_id')
-        ->where('pgl_invoices.status',3)
+        ->where('status',3)
+        ->count(); 
+
+        $pendinginvoice= $all_invoices=DB::table('pgl_invoices')
+        ->where('status',4)
         ->count(); 
 
         exit(json_encode([
@@ -347,7 +345,8 @@ function shipment_summary(){
             'allinvoice'=>$allinvoice,
             'openinvoice'=>$openinvoice,
             'pastdueinvoice'=>$pastdueinvoice,
-            'paidinvoice'=>$paidinvoice
+            'paidinvoice'=>$paidinvoice,
+            'pendinginvoice'=>$pendinginvoice
 
         ]));
                 

@@ -1,4 +1,4 @@
-@extends('customer.layout.main')
+@extends('admin.layout.main')
 @section('title','Invoices')
 @section('content')
 <div class="site-content">
@@ -21,7 +21,7 @@
 		   		</select>
 		   </div>
 	<div class="site" id="user_data">
-		@include('customer.invoice.invoice_data')
+		@include('admin.invoice.invoice_data')
 	</div>
 </div>
 @stop
@@ -37,7 +37,7 @@
 	   	 function getMoreVehicle(page){
 	      	 $('#searchBody').html("<div style='position:fixed; margin-top:7%; margin-left:40%;'><img width='70px' src= '"+"{{asset('img/loading.gif')}}"+"' alt='Loading ...'> </div> ");
 		       var request = $.ajax({
-	              url: "{{route('paginate_invoice_customer')}}" +'?page='+page,
+	              url: "{{route('paginate_invoice_admin')}}" +'?page='+page,
 	              method: "GET",
 	              data: {paginate:$("#showEntry").val(),status:"{{$status}}"},
 	            }); 
@@ -57,7 +57,7 @@
 	   	 function searchVehicle(searchData){
 	      	 $('#searchBody').html("<div style='position:fixed; margin-top:7%; margin-left:40%;'><img width='70px' src= '"+"{{asset('img/loading.gif')}}"+"' alt='Loading ...'> </div> ");
 		       var request = $.ajax({
-	              url: "{{route('search_invoice_customer')}}",
+	              url: "{{route('search_invoice_admin')}}",
 	              method: "GET",
 	              data: {searchValue:searchData,status:"{{$status}}"},
 	            }); 
@@ -75,7 +75,7 @@
        		$('#searchBody').html("<div style='position:fixed; margin-top:7%; margin-left:40%;'><img width='70px' src= '"+"{{asset('img/loading.gif')}}"+"' alt='Loading ...'> </div> ");
        	 var data = $(this).val();
        		var request = $.ajax({
-	              url: "{{route('paginate_invoice_customer')}}",
+	              url: "{{route('paginate_invoice_admin')}}",
 	              method: "GET",
 	              data: {paginate:data,status:"{{$status}}"},
 	            }); 

@@ -18,7 +18,6 @@ class ShipmentControllerCustomer extends Controller
         $this->shipment=$shipment;
 
     }
-
     /**
      * Display a listing of the resource.
      *

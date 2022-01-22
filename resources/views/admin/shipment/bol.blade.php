@@ -1,4 +1,4 @@
-@extends('customer.layout.main')
+@extends('admin.layout.main')
 @section('title','BOL')
 <style>
     table {
@@ -32,23 +32,22 @@
         // print section
          $('#print').click(function(){
             $(this).addClass('hide');
-            $('no-print').addClass('hide');
+            $('.no-print').addClass('hide');
             $(".love").css("margin-top","-110px");
             window.print(); 
         });
-    })
+    });
 </script>
 @stop
 
 @section('content')
 <div class="site-content">
   <div class="content-area py-1">
-    <div class="container-fluid"> 
-    <div class="container">
+    <div class="container"> 
         <div class="row love" >
             <div class="col-md-6 col-md-offset-2">
-                <button type="button" class="btn btn-info no-print" id="print"><i class="fa fa-print"></i>&nbsp;Print</button>&nbsp;
-                <a target="_blank" href="{{route('bol_pdf_customer',@$conti->id)}}" type="button" class="btn btn-info no-print" id="bol_pdf"><i class="fa fa-pdf"></i>&nbsp;PDF</a>&nbsp;
+                <button type="button" class="btn btn-info btn-rounded no-print" id="print"><i class="fa fa-print"></i>&nbsp;Print</button>&nbsp;
+                <a target="_blank" href="{{route('bol_pdf_admin',@$conti->id)}}" type="button" class="btn btn-success btn-rounded no-print" id="bol_pdf"><i class="sidenave-icon fa fa fa-file-pdf-o"></i>&nbsp;PDF</a>&nbsp;
             </div>
             <br class="no-print">
             <br class="no-print">
@@ -81,20 +80,15 @@
                         <tr>
                             <td rowspan="2" id="td1" colspan="2">VESSEL / VOYAGE# / STEAMSHIP LINE / FLAG <br>    {{isset($conti)?$conti->vessel_name : ''}}/{{isset($conti)?$conti->voyage_number : ''}}#/{{isset($conti)?$conti->steamship_line : ''}}/{{isset($conti)?$conti->flag : ''}}
                                 </td>
-
-
                         </tr>
                         <tr>
-
                         </tr>
                         <tr>
-
                             <td id="td1">PLACE OF RECEIPT<br> {{isset($conti)?$conti->place_receipt : ''}}</td>
                             <td id="td1">COUNTRY OF ORIGIN<br>{{isset($conti)?$conti->country_origin : ''}}</td>
                         </tr>
-
                         <tr>
-                            <th  rowspan="5" colspan="2" id="td1"> FORWARDING AGENT
+                            <th rowspan="5" colspan="2" id="td1"> FORWARDING AGENT
                                 <br>
                                 {{isset($conti)?$conti->f_agent : ''}}
                                 <br>
@@ -104,12 +98,9 @@
                                 <br>
                                 Phone: {{isset($conti)?$conti->f_phone_number : ''}}/ Email: {{isset($conti)?$conti->f_email_address : ''}}
                                 <br>
-
                             </th>
                         </tr>
                         <tr>
-                            
-
                         </tr>
                         <tr>
                             <th id="td1" rowspan="6" >
@@ -127,39 +118,29 @@
                                 <br>
                                 <?php echo $data->cons_city; ?>, <?php echo $data->cons_zip_code; ?>, <?php echo $data->cons_country; ?>
                             </th>
-
                         </tr>
                         <tr>
-
                         </tr>
                         <tr>
-
-
                         </tr>
                         <tr>
-
-
                             <th  id="td1"> PORT OF LOADING <br>
                             {{isset($conti)?$conti->port_loading : ''}}</th>
                             <th  id="td1">PORT OF DISCHARGE <br>
                             {{ isset($conti)?$conti->port_discharge:'' }}</th>
                         </tr>
-
                         <tr>
-
                             <td id="td1"></td>
                             <td id="td1"></td>
-
                         </tr>
                         <tr>
-                            <th   id="td1"> ETD AT PORT OF LOADING
+                            <th id="td1"> ETD AT PORT OF LOADING
                                 <br>
-{{ isset($conti)?$conti->etd_port_loading:'' }}
-
+                                {{ isset($conti)?$conti->etd_port_loading:'' }}
                             </th>
                             <th  id="td1">ETA AT PORT OF DISCHARGE
                                 <br>
-{{ isset($conti)?$conti->eta_port_discharge:'' }}
+                                {{ isset($conti)?$conti->eta_port_discharge:'' }}
                             </th>
                         </tr>
                         <tr>
@@ -267,28 +248,19 @@
                                         <?php $sum=$sum+$datumo->vehicle_price; } ?></td>
 
                                 </tr>
-
                                 <tr>
-
-
                                 </tr>
                                 <tr>
-
                                 </tr>
                                 <tr>
-
                                 </tr>
                                 <tr>
-
                                 </tr>
                                 <tr>
-
                                 </tr>
                                 <tr>
-
                                 </tr>
                                 <tr>
-
                                 </tr>
                                 <tr>
 
@@ -321,7 +293,6 @@
             </div>
         </div>
     </div>
-</div>
 </div>
 </div>
 @endsection

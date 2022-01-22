@@ -104,10 +104,32 @@ Route::get('/add_shipment',function(){
     return view('admin.shipment.add_shipment');
 });
 Route::post('/add_new_shipment','admin\ShipmentController@add_new_shipment');
+Route::get('/edit_shipment/{id}','admin\ShipmentController@edit_shipment')->name('edit_shipment');
+Route::post('/update_shipment','admin\ShipmentController@update_shipment')->name('update_shipment');
+Route::get('/duplicate_shipment/{id}','admin\ShipmentController@duplicate_shipment')->name('duplicate_shipment');
+Route::get('delete_shipment/{id}','admin\ShipmentController@delete_shipment')->name('delete_shipment');
+// shipment bol and doc
+Route::get('/bol_admin/{id}','admin\ShipmentController@bol')->name('bol_admin');
+Route::get('/bol_pdf_admin/{id}','admin\ShipmentController@bol_pdf')->name('bol_pdf_admin');
+Route::get('/dock_recepit_admin/{id}','admin\ShipmentController@dock_recepit')->name('dock_recepit_admin');
+Route::get('/custom_form_admin/{id}','admin\ShipmentController@custom_form')->name('custom_form_admin');
+Route::get('/release_document_admin/{id}','admin\ShipmentController@release_document')->name('release_document_admin');
 
-// Route::get('/shipment_base_location_and_status_customer/{location}/{status}','ShipmentControllerCustomer@shipment_base_location_and_status')->name('shipment_base_location_and_status_customer');
-// Route::get('/shipment_base_location_and_status_search','ShipmentControllerCustomer@shipment_base_location_and_status_search')->name('shipment_base_location_and_status_search_customer');
-// Route::get('/paginate_shipment_base_location_and_status','ShipmentControllerCustomer@paginate_shipment_base_location_and_status')->name('paginate_shipment_base_location_and_status_customer');
+
+// Invoices section 
+Route::get('/invoice_admin/{id}','admin\InvoiceController@view_invoice')->name('invoice_admin');
+Route::get('/invoice_data_admin','admin\InvoiceController@invoice_data')->name('invoice_data_customer');
+Route::get('/search_invoice_admin','admin\InvoiceController@search_invoice')->name('search_invoice_admin');
+Route::get('/paginate_invoice_admin','admin\InvoiceController@paginate_invoice')->name('paginate_invoice_admin');
+Route::get('/invoices_pdf_admin/{id}','admin\InvoiceController@invoice_pdf')->name('invoice_pdf_admin');
+
+Route::get('/add_invoice','admin\InvoiceController@add_invoice')->name('add_invoice_admin');
+Route::post('/add_new_invoice','admin\InvoiceController@add_new_invoice')->name('add_new_invoice_admin');
+Route::get('/approve_invoice/{id}','admin\InvoiceController@approve_invoice')->name('approve_invoice');
+
+Route::get('/edit_invoice/{id}','admin\InvoiceController@edit_invoice')->name('edit_invoice_admin');
+Route::post('/update_invoice','admin\InvoiceController@update_invoice')->name('update_invoice_admin');
+Route::get('/delete_invoice/{id}','admin\InvoiceController@delete_invoice')->name('delete_invoice_admin');
 
 
 Route::get('/admin_logout','admin\LoginController@logout')->name('admin_logout');

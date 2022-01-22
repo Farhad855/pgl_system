@@ -1,5 +1,10 @@
 @extends('admin.layout.main')
 @section('title','Shipments')
+<style type="text/css">
+	label{
+		font-weight: bold;
+	}
+</style>
 @section('content')
 <div class="site-content">
   <div class="content-area py-1">

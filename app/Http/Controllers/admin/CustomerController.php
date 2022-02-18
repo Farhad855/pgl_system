@@ -12,18 +12,10 @@ use Image;
 
 class CustomerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     protected $customer;
     public function __construct(CustomerModel $customer)
     {
-        if(empty(session('access')))
-        {
-            return view('admin/auth/login');
-        }
+        $this->middleware('auth:admin');  
         $this->customer=$customer;
     }
     // company section 
@@ -230,7 +222,15 @@ class CustomerController extends Controller
         return redirect()->back()->with('success','Updated successfully');
     }
 
+    public function singel_customer(Request $request)
+    {
+      $customers=DB::table('customers')->select('id','customer_name')->where('company_id',$request['company_id'])->first();
+      
+        $data="<option value='$customers->id'>".$customers->customer_name.="</option>";
+       echo ($data);
+    }
 
+    
 
 
 

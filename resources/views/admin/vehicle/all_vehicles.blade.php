@@ -1,6 +1,6 @@
 @extends('admin.layout.main')
 @section('title','All Vehicles')
-<link rel="stylesheet" href="{{asset('assets/toast/jquery.toast.css')}}">
+<!-- <link rel="stylesheet" href="{{asset('assets/toast/jquery.toast.css')}}"> -->
 @section('content')
 <div class="site-content">
   <div class="content-area py-1">
@@ -10,16 +10,13 @@
 			 <input type="text" name="search" class="form-control b-a" placeholder="Search for ..." id="search">
 		   </div>
 		   <div class="form-group col-md-2 col-lg-2 col-sm-3 col-xs-6" style="margin:1%">
-			 <button class="btn btn-info excel">Excel</button>
+			<button type="button" class="excel btn btn-outline-warning mb-0-25 waves-effect waves-light">
+				<i class="fa fa-file-excel-o"></i>
+			</button>
 		   </div>
 		   <div class="form-group col-md-2 col-lg-2 col-sm-3 col-xs-6" style="margin:1%">
 			 <!-- <button class="btn btn-info pdf">PDF</button> -->
 		   </div>
-		   @if(@$deleted)
-		    
-		    	@toast();
-		   
-		   @endif
 		   <div class="form-group col-md-1 col-lg-1 col-sm-2 col-xs-12" style="margin:1%;float: right;">
 		   		<select class="form-control" id="showEntry">
 		   			<option value="20">20</option>
@@ -171,61 +168,6 @@
           	$('#user_data').append(textStatus);
         });
        });
-       // make sortable table 
-       $('th').each(function (col) {
-            $(this).hover(
-                    function () {
-                        $(this).addClass('focus');
-                    },
-                    function () {
-                        $(this).removeClass('focus');
-                    }
-            );
-            $(this).click(function () {
-                if ($(this).is('.asc')) {
-                    $(this).removeClass('asc');
-                    $(this).addClass('desc selected');
-                    sortOrder = -1;
-                } else {
-                    $(this).addClass('asc selected');
-                    $(this).removeClass('desc');
-                    sortOrder = 1;
-                }
-                $(this).siblings().removeClass('asc selected');
-                $(this).siblings().removeClass('desc selected');
-                var arrData = $('table').find('tbody >tr:has(td)').get();
-                arrData.sort(function (a, b) {
-                    var val1 = $(a).children('td').eq(col).text().toUpperCase();
-                    var val2 = $(b).children('td').eq(col).text().toUpperCase();
-                    if ($.isNumeric(val1) && $.isNumeric(val2))
-                        return sortOrder == 1 ? val1 - val2 : val2 - val1;
-                    else
-                        return (val1 < val2) ? -sortOrder : (val1 > val2) ? sortOrder : 0;
-                });
-                $.each(arrData, function (index, row) {
-                    $('tbody').append(row);
-                });
-            });
-        });
-       $('.excel').click(function(){
-	       $("#example").tableHTMLExport({
-			  type:'csv',
-			  filename:'sample.csv',
-			  separator: ',',
-			  newline: '\r\n',
-			  trimContent: true,
-			  quoteFields: true,
-			  ignoreColumns: '.column',
-			  ignoreRows: '.bottom',
-			  htmlContent: false,
-			  consoleLog:false,
-			});
-       });
-
-       if("{{@$deleted !='' }}"){
-       	toast();
-       }
-
        function toast(){
        	$.toast({
 			  text :"Success",

@@ -13,9 +13,7 @@ class InvoiceController extends Controller
     protected $invoice;
     public function __construct(InvoiceModel $invoice)
     {
-        if(session('access')==Null){
-            return view('admin/auth/login');
-        }
+        $this->middleware('auth:admin');  
         $this->invoice=$invoice;
     }
     
@@ -225,6 +223,14 @@ class InvoiceController extends Controller
         else{
              return redirect()->back()->with('eroor','Not Deleted');
         }
+    }
+
+    public function change_status_invoice(Request $request)
+    {
+        $ids = $request->ids;
+         DB::table('pgl_invoices')->whereIn('id',explode(",",$ids))
+         ->update(['status' =>$request->status]);
+        return response()->json(['status'=>true,'message'=>'Status changed Successfully !']);
     }
 
 }

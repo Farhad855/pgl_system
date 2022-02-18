@@ -7,10 +7,14 @@ use Illuminate\Http\Request;
 // use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use DB;
-use Session;
+use Auth;
 
 class LoginController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('guest');  
+    }
 
     public function login(Request $request) {
         $data = $request->All();
@@ -22,9 +26,12 @@ class LoginController extends Controller
         if ($validation->fails()) {
             return back()->withErrors($validation);
         }
-        if ($row = DB::table('users')->where('email', $data['email'])->first()) {
-            if(password_verify($data['password'],$row->password)){
-                session(['access'=>$row->id,'id'=>$row->id,'username'=>$row->username,'photo'=>$row->photo]);
+
+        // if ($row = DB::table('users')->where('email', $data['email'])->first()) {
+        //     if(password_verify($data['password'],$row->password)){
+        //         session(['access'=>$row->id,'id'=>$row->id,'username'=>$row->username,'photo'=>$row->photo]);
+
+                if(Auth::guard('admin')->attempt(['email'=>$request['email'],'password'=>$request['password']])) {
 
                 $locations=DB::table('locations')->get();
                 $vehicles=DB::table('vehicles')->count();
@@ -43,19 +50,16 @@ class LoginController extends Controller
             else{
                 return redirect()->back()->withErrors("Your Email or Password is Incorrect.");
             }
-        } else {
-            return redirect()->back()->withErrors("Your Email or Password is Incorrect.");
-        }
+        
        return redirect()->back()->withErrors("Your Email or Password is Incorrect.");
     }
  
     function logout()
     {
-        if(session('id'))
-        {
-            Session::flush();
+        if(Auth::guard('admin')->check()){
+            Auth::guard('admin')->logout();
             return redirect()->intended('/admin_login');
         }
-            return redirect()->back();
+        return redirect()->back();
     }
 }

@@ -30,6 +30,8 @@ Route::get('/paginat_customer_admin','admin\CustomerController@paginate_customer
 Route::get('/delete_customer_admin/{id}','admin\CustomerController@delete_customer')->name('delete_customer_admin');
 Route::post('/add_customer_admin','admin\CustomerController@add_customer')->name('add_customer_admin');
 Route::post('/edit_customer_admin','admin\CustomerController@edit_customer')->name('edit_customer_admin');
+Route::get('/single_customer_admin','admin\CustomerController@singel_customer')->name('single_customer_admin');
+
 
 // all vehicle section
 Route::get('/all_vehicles_admin','admin\VehicleController@all_vehicles')->name('all_vehicle_admin');
@@ -87,6 +89,11 @@ Route::get('/vehicle_cost_analysis_data_admin','admin\VehicleController@vehicle_
 Route::get('/search_vehicle_cost_analysis_admin','admin\VehicleController@search_vehicle_cost_analysis')->name('search_vehicle_cost_analysis_admin');
 Route::get('/paginate_vehicle_cost_analysis_admin','admin\VehicleController@paginate_vehicle_cost_analysis')->name('paginate_vehicle_cost_analysis_admin');
 
+    // tow cost report section 
+ Route::get('/tow_cost_report_admin','admin\VehicleController@tow_cost_report')->name('tow_cost_report_admin');
+Route::get('/tow_cost_report_data_admin','admin\VehicleController@tow_cost_report_data')->name('tow_cost_report_data_admin');
+Route::get('/search_tow_cost_report','admin\VehicleController@search_tow_cost_report')->name('search_tow_cost_report_admin');
+Route::get('/paginate_tow_cost_report','admin\VehicleController@paginate_tow_cost_report')->name('paginate_tow_cost_report_admin');
 
 //  vehicle dateline section
 Route::get('/dateline_vehicles_admin','admin\VehicleController@dateline_vehicles')->name('dateline_vehicle_admin');
@@ -94,6 +101,30 @@ Route::get('/dateline_vehicles_data_admin','admin\VehicleController@dateline_veh
 Route::get('/search_dateline_vehicle_admin','admin\VehicleController@search_dateline_vehicle')->name('search_dateline_vehicle_admin');
 Route::get('/paginate_dateline_vehicle_admin','admin\VehicleController@paginate_dateline_vehicle')->name('paginate_dateline_vehicle_admin');
 Route::get('/paginate_entry_dateline_vehicle_admin','admin\VehicleController@paginate_entry_dateline_vehicle')->name('paginate_entry_dateline_vehicle_admin');
+//  view vehicle photo form google drive
+ Route::get('/vehicle_photo_admin/{id}','admin\VehicleController@vehicle_photo')->name('vehicle_photo_admin');
+// vehicle condational report
+ Route::get('vehicle_condational_report_admin/{id}','admin\VehicleController@vehicle_condational_report')->name('vehicle_condational_report_admin');
+ // route to vehicle auction invoice 
+Route::get('/auction_inv_file_admin/{file}', [ function ($file) {
+    $path = base_path('../pgl/public/assets/file/'.$file);
+    if (file_exists($path)) {
+        return response()->file($path, array('Content-Type' =>'application/pdf'));
+    }
+    abort(404);
+}])->name('auction_ivn_file.admin');
+
+// vehicle summary section 
+Route::get('/vehicle_summary','admin\VehicleController@vehicle_summary')->name('vehicle_summary');
+Route::get('/vehicle_summary_search/{company_id}/{status}/{location}','admin\VehicleController@vehicle_summary_search')->name('vehicle_summary_search');
+// add and edit vehicle
+Route::get('/add_vehicle','admin\VehicleController@add_vehicle')->name('add_vehicel');
+Route::post('/add_new_vehicle','admin\VehicleController@add_new_vehicle')->name('add_vnew_ehicel');
+Route::get('/edit_vehicle/{id}','admin\VehicleController@edit_vehicle')->name('edit_vehicel');
+Route::post('/update_vehicle','admin\VehicleController@update_vehicle')->name('update_vehicel');
+Route::get('/single_vehicle_vin','admin\VehicleController@singel_vehicle_vin')->name('single_vehicle_vin');
+
+
 
 // Shipment section 
 Route::get('/shipment_admin/{id}/{location}','admin\ShipmentController@shipment')->name('shipment_admin');
@@ -114,6 +145,9 @@ Route::get('/bol_pdf_admin/{id}','admin\ShipmentController@bol_pdf')->name('bol_
 Route::get('/dock_recepit_admin/{id}','admin\ShipmentController@dock_recepit')->name('dock_recepit_admin');
 Route::get('/custom_form_admin/{id}','admin\ShipmentController@custom_form')->name('custom_form_admin');
 Route::get('/release_document_admin/{id}','admin\ShipmentController@release_document')->name('release_document_admin');
+Route::get('/change_status_shipment','admin\ShipmentController@change_status_shipment')->name('change_status_shipment');
+Route::get('/shipment_summary','admin\ShipmentController@shipment_summary')->name('shipment_summary');
+Route::get('/shipment_summary_search/{company_id}/{status}','admin\ShipmentController@shipment_summary_search')->name('shipment_summary_search');
 
 
 // Invoices section 
@@ -122,14 +156,56 @@ Route::get('/invoice_data_admin','admin\InvoiceController@invoice_data')->name('
 Route::get('/search_invoice_admin','admin\InvoiceController@search_invoice')->name('search_invoice_admin');
 Route::get('/paginate_invoice_admin','admin\InvoiceController@paginate_invoice')->name('paginate_invoice_admin');
 Route::get('/invoices_pdf_admin/{id}','admin\InvoiceController@invoice_pdf')->name('invoice_pdf_admin');
-
 Route::get('/add_invoice','admin\InvoiceController@add_invoice')->name('add_invoice_admin');
 Route::post('/add_new_invoice','admin\InvoiceController@add_new_invoice')->name('add_new_invoice_admin');
 Route::get('/approve_invoice/{id}','admin\InvoiceController@approve_invoice')->name('approve_invoice');
-
 Route::get('/edit_invoice/{id}','admin\InvoiceController@edit_invoice')->name('edit_invoice_admin');
 Route::post('/update_invoice','admin\InvoiceController@update_invoice')->name('update_invoice_admin');
 Route::get('/delete_invoice/{id}','admin\InvoiceController@delete_invoice')->name('delete_invoice_admin');
+Route::get('/change_status_invoice','admin\InvoiceController@change_status_invoice')->name('change_status_invoice');
+
+// Shipping rate section 
+Route::get('/shipping_rate_admin','admin\RateController@view_shipping_rate')->name('shipping_rate_admin');
+Route::get('/shipping_rate_data_admin','admin\RateController@shipping_rate_data')->name('shipping_rate_data_admin');
+Route::get('/search_shipping_rate_admin','admin\RateController@search_shipping_rate')->name('search_shipping_rate_admin');
+Route::get('/paginate_shipping_rate_admin','admin\RateController@paginate_shipping_rate')->name('paginate_shipping_rate_admin');
+Route::post('/add_shipping_rate_admin','admin\RateController@add_shipping_rate')->name('add_shipping_rate_admin');
+Route::post('/update_shipping_rate_admin','admin\RateController@update_shipping_rate')->name('update_shipping_rate_admin');
+Route::get('/delete_shipping_rate_admin/{id}','admin\RateController@delete_shipping_rate')->name('delete_shipping_rate_admin');
+
+
+// Twoing rate section 
+Route::get('/towing_rate_admin','admin\RateController@view_towing_rate')->name('towing_rate_admin');
+Route::get('/towing_rate_data_admin','admin\RateController@towing_rate_data')->name('towing_rate_data_admin');
+Route::get('/search_towing_rate_admin','admin\RateController@search_towing_rate')->name('search_towing_rate_admin');
+Route::get('/paginate_towing_rate_admin','admin\RateController@paginate_towing_rate')->name('paginate_towing_rate_admin');
+Route::post('/add_towing_rate_admin','admin\RateController@add_update_towing_rate')->name('add_towing_rate_admin');
+Route::post('/update_towing_rate_admin','admin\RateController@add_update_towing_rate')->name('update_towing_rate_admin');
+Route::get('/delete_towing_rate_admin/{id}','admin\RateController@delete_towing_rate')->name('delete_towing_rate_admin');
+
+// Pgl profile section 
+Route::get('pgl_profile','admin\PglController@pgl_profile')->name('pgl_profile'); 
+Route::post('update_pgl_profile','admin\PglController@update_pgl_profile')->name('update_pgl_profile'); 
+
+// location section 
+Route::get('/location_admin','admin\PglController@location')->name('location_admin');
+Route::get('/location_data_admin','admin\PglController@location_data')->name('all_vehicle_data_admin');
+Route::get('/search_location','admin\PglController@search_location')->name('search_location_admin');
+Route::get('/paginat_location_admin','admin\PglController@paginate_location')->name('paginate_location_admin');
+Route::get('/delete_location_admin/{id}','admin\PglController@delete_location')->name('delete_location_admin');
+Route::post('/add_location_admin','admin\PglController@add_location')->name('add_location_admin');
+Route::post('/edit_location_admin','admin\PglController@edit_location')->name('edit_location_admin');
+
+// status section 
+Route::get('/status_admin','admin\PglController@status')->name('status_admin');
+Route::get('/status_data_admin','admin\PglController@status_data')->name('all_vehicle_data_admin');
+Route::get('/search_status','admin\PglController@search_status')->name('search_status_admin');
+Route::get('/paginat_status_admin','admin\PglController@paginate_status')->name('paginate_status_admin');
+Route::get('/delete_status_admin/{id}','admin\PglController@delete_status')->name('delete_status_admin');
+Route::post('/add_status_admin','admin\PglController@add_status')->name('add_status_admin');
+Route::post('/edit_status_admin','admin\PglController@edit_status')->name('edit_status_admin');
+
+
 
 
 Route::get('/admin_logout','admin\LoginController@logout')->name('admin_logout');

@@ -1,5 +1,5 @@
 @extends('admin.layout.main')
-@section('title','Shipments')
+@section('title','Add Ship')
 <style type="text/css">
 	label{
 		font-weight: bold;

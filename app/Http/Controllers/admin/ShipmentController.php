@@ -15,14 +15,7 @@ class ShipmentController extends Controller
 {
     public function __construct()
     {
-        
-            if(session('access')==Null)
-        {
-            return view('admin/auth/login');
-        }
-        
-
-        
+        $this->middleware('auth:admin');  
     }
 
     public function shipment($status='',$locations='')
@@ -47,20 +40,19 @@ class ShipmentController extends Controller
         }
 
         $shipment = DB::table('containers')
-           ->select("containers.*","tbl_bases.container_id","containers.id as cid","companies.name as company_name")
-           ->join('tbl_bases','tbl_bases.container_id','=','containers.id')
-           ->join('companies','companies.id','=','containers.company_id');
+           ->select("containers.*","containers.id as cid","companies.name as company_name")
+           // ->leftJoin('tbl_bases','tbl_bases.container_id','=','containers.id')
+           ->leftJoin('companies','companies.id','=','containers.company_id');
            if(!empty($status)){
            $shipment->whereIn('containers.status',$status);
-            }
+             }
            if($sta=='9'){
            $shipment->where('containers.cut_off_date',date('Y-m-d'));
             }
             if($location !='10'){
                $shipment->where('containers.port_loading','like', '%'.$location.'%');
             }
-           $shipment->groupBy('cid')
-           ->orderBy('containers.id','desc');
+           $shipment->orderBy('containers.id','desc');
           $shipments=$shipment->paginate(20);
            return view('admin.shipment.shipment',['shipments'=>$shipments,'paginate'=>20,'status'=>$sta,'location'=>$location]);      
     }
@@ -91,12 +83,11 @@ class ShipmentController extends Controller
             else $location = $request['locations'];
         }
         $searchQuery = trim($request['searchValue']);
-        $requestData = ['containers.booking_number','containers.container_number','containers.port_loading'];
+        $requestData = ['containers.booking_number','containers.container_number','containers.port_loading','companies.name'];
         if($request->ajax()){
-        $shipment = DB::table('containers')->select("containers.*","tbl_bases.container_id","containers.id as cid","companies.name as company_name")
-           ->join('tbl_bases','tbl_bases.container_id','=','containers.id')
-           ->join('companies','companies.id','=','containers.company_id');
-           if($searchQuery!=''){
+        $shipment = DB::table('containers')->select("containers.*","containers.id as cid","companies.name as company_name")
+           ->leftjoin('companies','companies.id','=','containers.company_id');
+           if(strlen($searchQuery) >= 2){
              $pagination=20000;
             $shipment->where(function($q) use($requestData, $searchQuery) {
                     foreach ($requestData as $field)
@@ -112,8 +103,7 @@ class ShipmentController extends Controller
             if($location !='10'){
                $shipment->where('containers.port_loading','like', '%'.$location.'%');
             }
-           $shipment->groupBy('cid')
-           ->orderBy('containers.id','desc');
+           $shipment->orderBy('containers.id','desc');
           $shipments=$shipment->paginate($pagination);
            return view('admin.shipment.shipment_data',['shipments'=>$shipments,'paginate'=>20,'status'=>$sta,'location'=>$location]);
         } 
@@ -150,9 +140,8 @@ class ShipmentController extends Controller
 
          if($request->ajax()){
              $shipment = DB::table('containers')
-             ->select("containers.*","tbl_bases.container_id","containers.id as cid","companies.name as company_name")
-               ->join('tbl_bases','tbl_bases.container_id','=','containers.id')
-               ->join('companies','companies.id','=','containers.company_id');
+             ->select("containers.*","containers.id as cid","companies.name as company_name")
+               ->leftJoin('companies','companies.id','=','containers.company_id');
                if(!empty($status)){
                $shipment->whereIn('containers.status',$status);
                 }
@@ -162,8 +151,7 @@ class ShipmentController extends Controller
               if($location !='10'){
                $shipment->where('containers.port_loading','like', '%'.$location.'%');
                }
-               $shipment->groupBy('cid')
-               ->orderBy('containers.id','desc');
+               $shipment->orderBy('containers.id','desc');
               $shipments=$shipment->paginate($pagination);
                return view('admin.shipment.shipment_data',['shipments'=>$shipments,'paginate'=>20,'status'=>$sta,'location'=>$location]);
         } 
@@ -414,8 +402,58 @@ class ShipmentController extends Controller
         return view('admin.shipment.release_document', ['conti' => $container]);
         
     }
+    // change shipment status 
+    public function change_status_shipment(Request $request)
+    {
+        $ids = $request->ids;
+         DB::table('containers')->whereIn('id',explode(",",$ids))
+         ->update(['status' =>$request->status]);
+        return response()->json(['status'=>true,'message'=>'Status changed Successfully !']);
+    }
 
+    function shipment_summary(Request $request)
+    {
+        $locations=DB::table('locations')->get();
+        if($request['location'])
+        {
+            $location=$request['location'];
+            if($location=='Savannah, GA'){$location='Savannah';}
+            $container = DB::table('companies')
+            ->select('companies.*','companies.id as cid')
+            ->rightjoin('containers','containers.company_id','=','companies.id')
+            // ->where('containers.port_loading','like','%'.$request['location'].'%')
+            // ->groupby('companies.id')   
+            ->when($location !='All',
+                function($q) use ($location){
+                    return $q->where('containers.port_loading','like', '%'.$location.'%');
+                }
+            )->groupby('companies.id') 
+            ->get();
+        return view('admin.shipment.shipment_summary_data')
+        ->with(['shipments' => $container,'locations'=>$locations]);
+        }
+        else{
+        $container = DB::table('companies')
+            ->select('companies.*','companies.id as cid')
+            ->groupby('companies.id')
+            ->get();
+        return view('admin.shipment.shipment_summary')
+        ->with(['shipments' => $container,'locations'=>$locations]);
+       }
+    }
 
-
+    public function shipment_summary_search($company_id='', $status='')
+    {
+       
+        $shipment = DB::table('containers')
+           ->select("containers.*","containers.id as cid","companies.name as company_name")
+           ->leftJoin('companies','companies.id','=','containers.company_id');
+           if($status !='5'){
+           $shipment->where(['containers.status'=>$status,'containers.company_id'=>$company_id]);
+             }
+           $shipment->orderBy('containers.id','desc');
+           $shipments=$shipment->paginate(100);
+           return view('admin.shipment.shipment_summary_search',['shipments'=>$shipments,'status'=>10,'company_id'=>$company_id]); 
+    }
 
 }

@@ -1,4 +1,4 @@
-@extends('customer.layout.main')
+@extends('admin.layout.main')
 @section('title','Towing Rate')
 @section('content')
 <div class="site-content">
@@ -7,6 +7,10 @@
 		<div class=" bg-white table-responsive">
 			<div class="form-group col-md-3 col-lg-3 col-sm-6 col-xs-12" style="margin:1%">
 			 <input type="text" name="search" class="form-control b-a" placeholder="Search for ..." id="search">
+		   </div>
+		   <div class="form-group col-md-1 col-lg-1 col-sm-6 col-xs-12" style="margin:1%">
+				<button type="button" class="btn btn-warning btn-rounded mb-0-25 waves-effect waves-light" data-toggle="modal" data-target="#add_towing_rate"><b><i class="ti-plus"></i></b> Add
+				</button>
 		   </div>
 		   <div class="form-group col-md-1 col-lg-1 col-sm-2 col-xs-12" style="margin:1%;float: right;">
 		   		<select class="form-control" id="showEntry">
@@ -21,8 +25,9 @@
 		   		</select>
 		   </div>
 	<div class="site" id="user_data">
-		@include('customer.rate.towing_rate_data')
+		@include('admin.rate.towing_rate_data')
 	</div>
+	@include('admin.rate.add_towing_rate')
 </div>
 @stop
 @section('js')
@@ -37,7 +42,7 @@
 	   	 function getMoreVehicle(page){
 	      	  $('#searchBody').html("<div style='position:fixed; margin-top:7%; margin-left:40%;'><img width='70px' src='img/loading.gif' alt='Loading ...'> </div> ");
 		       var request = $.ajax({
-	              url: "{{route('paginate_towing_rate_customer')}}" +'?page='+page,
+	              url: "{{route('paginate_towing_rate_admin')}}" +'?page='+page,
 	              method: "GET",
 	              data: {paginate:$("#showEntry").val()},
 	            }); 
@@ -57,7 +62,7 @@
 	   	 function searchVehicle(searchData){
 	      	 $('#searchBody').html("<div style='position:fixed; margin-top:7%; margin-left:40%;'><img width='70px' src='img/loading.gif' alt='Loading ...'> </div> ");
 		       var request = $.ajax({
-	              url: "{{route('search_towing_rate_customer')}}",
+	              url: "{{route('search_towing_rate_admin')}}",
 	              method: "GET",
 	              data: {searchValue:searchData},
 	            }); 
@@ -75,7 +80,7 @@
        		 $('#searchBody').html("<div style='position:fixed; margin-top:7%; margin-left:40%;'><img width='70px' src='img/loading.gif' alt='Loading ...'> </div> ");
        	 var data = $(this).val();
        		var request = $.ajax({
-	              url: "{{route('paginate_towing_rate_customer')}}",
+	              url: "{{route('paginate_towing_rate_admin')}}",
 	              method: "GET",
 	              data: {paginate:data},
 	            }); 

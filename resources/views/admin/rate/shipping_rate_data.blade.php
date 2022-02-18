@@ -1,5 +1,5 @@
-			<table class="table">
-				<thead class="bg-primary">
+			<table class="table table-bordered">
+				<thead class="bg-info">
 					<tr>
 						<th>#</th>
 						<th>From port</th>
@@ -10,9 +10,11 @@
                         <th>New price</th>
                         <th>Increase /decrease</th>
                         <th>Note</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
 					</tr>
 				</thead>
-				<tbody >
+				<tbody>
 					<?php $id =1; ?>
 					@foreach($shippingrates as $item)
 					<tr id="searchBody">
@@ -25,7 +27,16 @@
                         <td>{{$item->new_price}}</td>
                         <td>${{(float)$item->new_price-(float)$item->old_price}}</td>
                         <td>{{strip_tags($item->note)}}</td>
+                        <td>
+	                   	<a href="#edit_shipping_rate{{$item->id}}" class="btn btn-primary btn-circle" data-toggle="modal"><span class="fa fa-pencil"></span>
+	                   	</a>
+	                   </td>
+	                   <td>
+	                   	<a class="btn btn-warning btn-circle" onclick="javascript:return confirm('Are you sure you want to delete ?')" href="{{route('delete_shipping_rate_admin',$item->id)}}"><span class="fa fa-trash"></span>
+	                   	</a>
+	                   </td>
 					</tr>
+					@include('admin.rate.edit_shipping_rate')
 					@endforeach
 				</tbody>
 				<tfoot>
@@ -39,6 +50,8 @@
                         <th>New price</th>
                         <th>Increase /decrease</th>
                         <th>Note</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
 					</tr>
 				</tfoot>
 			</table>

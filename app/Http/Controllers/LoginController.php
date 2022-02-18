@@ -71,8 +71,8 @@ class LoginController extends Controller
     function logout()
     {
         if(Auth::check()){
-        Auth::logout();
-        return redirect()->intended('/customer_login');
+            Auth::logout();
+            return redirect()->intended('/customer_login');
         }
         return redirect()->back();
     }

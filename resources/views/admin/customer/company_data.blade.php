@@ -1,7 +1,7 @@
 			<table class="table table-bordered">
 				<thead class="bg-info dataTable" id="table-2">
 					<tr>
-						<th>#</th>
+						<th width="5px;">#</th>
 						<th>Name</th>
                         <th>Action</th>
 					</tr>
@@ -19,7 +19,7 @@
 	                   	</a>
 	                   </td>
 					</tr>
-					<!-- add company modal -->
+					<!-- Edit company modal -->
 					<div class="modal fade small-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="edit_company{{$company->id}}">
 						<div class="modal-dialog modal-md">
 							<form class="form" action="{{route('edit_company_admin')}}" method="post">
@@ -29,7 +29,7 @@
 										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 											<span aria-hidden="true">×</span>
 										</button>
-										<h4 class="modal-title">Add company</h4>
+										<h4 class="modal-title">Edit company</h4>
 									</div>
 									<div class="modal-body">
 										<div class="form-group">

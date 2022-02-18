@@ -9,7 +9,7 @@
 			 <input type="text" name="search" class="form-control b-a" placeholder="Search for ..." id="search">
 		   </div>
 		   <div class="form-group col-md-1 col-lg-1 col-sm-6 col-xs-12" style="margin:1%">
-				<button type="button" class="btn btn-info btn-rounded mb-0-25 waves-effect waves-light" data-toggle="modal" data-target="#add_company"><b><i class="ti-plus"></i></b> Add
+				<button type="button" class="btn btn-warning btn-rounded mb-0-25 waves-effect waves-light" data-toggle="modal" data-target="#add_company"><b><i class="ti-plus"></i></b> Add
 				</button>
 		   </div>
 		   <div class="form-group col-md-1 col-lg-1 col-sm-2 col-xs-12" style="margin:1%;float: right;">

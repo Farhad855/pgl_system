@@ -1,4 +1,4 @@
-@extends('customer.layout.main')
+@extends('admin.layout.main')
 @section('title','Vehicle Photo')
 @section('content')
 <div class="site-content">

@@ -965,7 +965,7 @@ class VehicleControllerCustomer extends Controller
           // return PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('customer.vehicle.all_vehicles',['vehicles'=>$vehicles],['format' => ['A4',190,236]])->stream();
 
         $pdf = PDF::loadView('customer.vehicle.vehicle_pdf',['vehicles'=>$vehicles],['format' => 'A4']);
-        return $pdf->download('invoice.pdf');
+        return $pdf->download('vehicle.pdf');
 
     }
 
@@ -1003,5 +1003,14 @@ class VehicleControllerCustomer extends Controller
            $link=$data->link;
            return view('customer.vehicle.vehicle_photo')->with(['id'=> $id,'link'=>$link]);  
      }
+
+     // change vehicle status 
+    public function change_status_shipment(Request $request)
+    {
+        $ids = $request->ids;
+         DB::table('vehicles')->whereIn('id',explode(",",$ids))
+         ->update(['status' =>$request->status]);
+        return response()->json(['status'=>true,'message'=>'Status changed Successfully !']);
+    }
     
 }

@@ -14,11 +14,7 @@ class HomeController extends Controller
      
     public function __construct()
     {
-        if(empty(session('access')))
-        {
-            return view('admin/auth/login');
-        }
-                        
+        $this->middleware('auth:admin');                
     }
 
     /**
@@ -85,14 +81,14 @@ function vehicle_summary(Request $request){
            $AllData.="<tr>";
             $AllData.="<th>".$loc->location. "</th>";
            $AllData.="<td style='text-align: center'>
-             <a href=" . url('vehicle_base_location_and_status_customer',['loc'=>$loc->id,'car'=>1]).">".
+             <a href=" . url('vehicle_summary_search',['0','1',$loc->id]).">".
                 $on_the_way=DB::table('vehicles')
                 ->where('location_id',$loc->id)
                 ->where('carstate_id',1)->count();
                 "</a> 
             </td>";
             $AllData.="<td style='text-align: center'>
-             <a href=" . url('vehicle_base_location_and_status_customer',['loc'=>$loc->id,'car'=>2]).">".
+             <a href=" . url('vehicle_summary_search',['0','2',$loc->id]).">".
                 $on_hand_no_title=DB::table('vehicles')
                 ->where('location_id',$loc->id)
                 ->where('carstate_id',2)->count();
@@ -100,7 +96,7 @@ function vehicle_summary(Request $request){
             </td>";
 
             $AllData.="<td style='text-align: center'>
-             <a href=" . url('vehicle_base_location_and_status_customer',['loc'=>$loc->id,'car'=>3]).">".
+             <a href=" . url('vehicle_summary_search',['0','3',$loc->id]).">".
                 $on_hand_with_title=DB::table('vehicles')
                 ->where('location_id',$loc->id)
                 ->where('carstate_id',3)->count();
@@ -108,16 +104,15 @@ function vehicle_summary(Request $request){
             </td>";
 
             $AllData.="<td style='text-align: center'>
-             <a href=" . url('vehicle_base_location_and_status_customer',['loc'=>$loc->id,'car'=>5]).">".
+             <a href=" . url('vehicle_summary_search',['0','5',$loc->id]).">".
                 $shipped=DB::table('vehicles')
                 ->where('location_id',$loc->id)
-                // ->where('customer_id',Auth::id())
                 ->where('carstate_id',5)->count();
                 "</a> 
             </td>";
 
             $AllData.="<td style='text-align: center'>
-             <a href=" . url('vehicle_base_location_and_status_customer',['loc'=>$loc->id,'car'=>6]).">".
+             <a href=" . url('vehicle_summary_search',['0','6',$loc->id]).">".
                 $pending=DB::table('vehicles')
                 ->where('location_id',$loc->id)
                 ->where('carstate_id',6)->count();
@@ -125,7 +120,7 @@ function vehicle_summary(Request $request){
             </td>";
 
             $AllData.="<td style='text-align: center'>
-             <a href=" . url('vehicle_base_location_and_status_customer',['loc'=>$loc->id,'car'=>'10']).">".
+             <a href=" . url('vehicle_summary_search',['0','10',$loc->id]).">".
                 $total=(int)$on_the_way+(int)$on_hand_no_title+(int)$on_hand_with_title+(int)$pending+(int)$shipped;
               
                 "</a> 
@@ -143,19 +138,19 @@ function vehicle_summary(Request $request){
       $AllData.= "<th> Total </th>";
 
       $AllData.="<td style='text-align: center'>
-      <a href=" . route('on_theway_vehicle_customer').">". $sum; " </a>
+      <a href=" . route('on_theway_vehicle_admin').">". $sum; " </a>
       </td>";
       $AllData.="<td style='text-align: center'>
-      <a href=" . route('pending_vehicle_customer').">". $sum1; " </a>
+      <a href=" . route('onhand_notitle_vehicle_admin').">". $sum1; " </a>
       </td>";
       $AllData.="<td style='text-align: center'>
-      <a href=" . route('onhand_notitle_vehicle_customer').">". $sum2; " </a>
+      <a href=" . route('onhand_withtitle_vehicle_admin').">". $sum2; " </a>
       </td>";
       $AllData.="<td style='text-align: center'>
-      <a href=" . route('onhand_withtitle_vehicle_customer').">". $sum4; " </a>
+      <a href=" . route('shipped_vehicle_admin').">". $sum4; " </a>
       </td>";
       $AllData.="<td style='text-align: center'>
-      <a href=" . route('shipped_vehicle_customer').">". $sum5; " </a>
+      <a href=" . route('pending_vehicle_admin').">". $sum5; " </a>
       </td>";
       $AllData.="<td style='text-align: center'>
       <a href=" . route('all_vehicle_admin').">". $sumo=$sumo+$sum+$sum1+$sum2+$sum3+$sum4+$sum5; " </a>
@@ -190,44 +185,35 @@ function shipment_summary(){
            $locations=$loc->location;
 
             $loadingshipments = DB::table('containers')
-            ->select("containers.id","tbl_bases.container_id","containers.id as id")
-            ->leftJoin('tbl_bases','tbl_bases.container_id','=','containers.id')
             ->where('containers.status',0)
             ->where('port_loading','like', '%'.$locations.'%')
-            ->groupBy('containers.id')
-            ->get();
+            ->count();
 
-                 $onthewayshipments = DB::table('containers')
-                ->select("containers.id","tbl_bases.container_id","containers.id as id")
-                ->leftJoin('tbl_bases','tbl_bases.container_id','=','containers.id')
-                ->whereIn('containers.status',[1,4,5])
+            $onthewayshipments = DB::table('containers')
+                ->where('status',1)
                 ->where('port_loading','like', '%'.$locations.'%')
-                ->groupBy('containers.id')
-                ->get();
+                ->count();
 
             $arrivedshipments = DB::table('containers')
-                ->select("containers.id","tbl_bases.container_id","containers.id as id")
-                ->leftJoin('tbl_bases','tbl_bases.container_id','=','containers.id')
-                ->where('containers.status',2)
+                ->where('status',2)
                 ->where('port_loading','like', '%'.$locations.'%')
-                ->groupBy('containers.id')
-                ->get();
+                ->count();
 
            $AllData.="<tr>";
             $AllData.="<th>".$loc->location. "</th>";
            $AllData.="<td style='text-align: center'>
              <a href=" . route('shipment_admin',['0',$loc->location]).">".
-                $loadingshipment=count($loadingshipments);
+                $loadingshipment=$loadingshipments;
             "</a> 
             </td>";
             $AllData.="<td style='text-align: center'>
              <a href=" . route('shipment_admin',['1',$loc->location]).">".
-                $onthewayshipment=count($onthewayshipments);
+                $onthewayshipment=$onthewayshipments;
              "</a> 
             </td>";
             $AllData.="<td style='text-align: center'>
              <a href=" .route('shipment_admin',['2',$loc->location]) .">".
-                $arrivedshipment=count($arrivedshipments);
+                $arrivedshipment=$arrivedshipments;
              "</a> 
             </td>";
             $AllData.="<td style='text-align: center'>

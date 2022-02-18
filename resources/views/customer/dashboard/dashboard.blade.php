@@ -147,7 +147,7 @@
 	      function vehicle_summary(){
 	      	$('#vehicle_summary').html("<div style='text-align:center'><img width='40px' src='img/loading.gif' alt='Loading ...'> </div>");
 		       var request = $.ajax({
-	              url: "{{url('vehicle_summary')}}",
+	              url: "{{url('vehicle_summary_customer')}}",
 	              method: "GET",
 	              data: {},
 	              dataType: "json"
@@ -170,7 +170,7 @@
               	$('#veh_summary').removeClass('active');
               	$('#ship_summary').addClass('active');
             	var request = $.ajax({
-	              url: "{{url('shipment_summary')}}",
+	              url: "{{url('shipment_summary_customer')}}",
 	              method: "GET",
 	              data: {},
 	              dataType: "json"

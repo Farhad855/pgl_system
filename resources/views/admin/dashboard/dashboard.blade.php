@@ -54,7 +54,7 @@
 						<div class="t-content">
 							<h6 class="text-uppercase mb-1">Customers</h6>
 							<h1 class="mb-1">{{@$customers}}</h1>
-							<i class="fa fa-users text-success mr-0-5"></i><span><a href="{{route('invoice_customer','5')}}">View Customers</a></span>
+							<i class="fa fa-users text-success mr-0-5"></i><span><a href="{{route('customer_admin','5')}}">View Customers</a></span>
 						</div>
 					</div>
 				</div>

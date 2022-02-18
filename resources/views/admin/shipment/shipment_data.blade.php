@@ -3,6 +3,9 @@
 					<tr>
 						<th>#</th>
 						<th>Edit</th>
+						@if($status !='10')
+						<th>Select</th>
+						@endif
 						<th>BOL</th>
 						<th>DR</th>
 						<th>Photo link</th>
@@ -19,7 +22,6 @@
 						<th>Loading date</th>
 						<th>ETD</th>
 						<th>ETA</th>
-						<th>Track container</th>
 						<th>Invoice</th>
 						<th>Amount</th>
 						@if($status==1)
@@ -28,7 +30,7 @@
 						@if($status==10)
 						<th>Customer form</th>
 						@endif
-						@if($status !=1 || $status !=2 || $status!=10)
+						@if($status !=1 and $status !=2 and $status!=10)
 						<th>Vessel name</th>
 						@endif
 						@if($status==10)
@@ -46,6 +48,11 @@
                             	<a href="{{route('edit_shipment',$item->id)}}" class="btn btn-info btn-circle waves-effect waves-light"><span class="fa fa-pencil"></span>
                             	</a>
                             </td>
+                            @if($status !='10')
+							<td> 
+								<input type="checkbox" class="checkbox" data-id={{$item->id}}"> 
+							</td>
+							@endif
                             <td>
                             	<a target="_blank" href="{{route('bol_admin',$item->id)}}">BOL</a>
                             </td>
@@ -65,12 +72,12 @@
                             @else
                             <td  style="background-color:#dd4b39;"><span style="padding:5px ;color:white;">{{$item->actions}}<span/></td>
                             @endif
-                            <td>{{$item->customer_note}}</td>
-						    <td>{{$item->company_name}}</td>
+                            <td><?=$item->customer_note?></td>
+						    <td><span class="tag tag-success">{{$item->company_name}}</span></td>
                             <td>{{$item->c_size}}</td>
                             <td>{{$item->port_loading}}</td>
                             <td>{{$item->port_discharge}}</td>
-                            <td>{{$item->n_units_load}}</td>
+                            <td ><span class="">{{$item->n_units_load}}</span></td>
 							<td>
                                 <?php 
                                 if($item->status==0) { ?>
@@ -90,7 +97,6 @@
                             <td>{{$item->loading_date}}</td>
                             <td>{{$item->etd_port_loading}}</td>
                             <td>{{$item->eta_port_discharge}}</td>
-                            <td>track_container</td>
                             <td>{{$item->inv_number}}</td>
 							<td>{{$item->amount}}</td>
 							@if($status==1)
@@ -100,11 +106,17 @@
                             <td><a target="_blank" class="btn btn-primary btn-sm btn-rounded" href="{{route('custom_form_admin',$item->id)}}" >C.F</a>
                             </td>
                             @endif
-                            @if($status!=1 or $status!=2 or $status!=10)
+                            @if($status !=1 and $status !=2 and $status!=10)
                             <td>{{$item->vessel_name}}</td>
                             @endif
                             @if($status==10)
-                            <td><a href="" class="btn btn-warning btn-circle waves-effect waves-light"><span class="fa fa-trash"></span></a>
+                            <td>
+                            	@if (DB::table('tbl_bases')->where('container_id', '=', $item->id)->exists())
+                            	<a  onclick="javascript: return alert('This Shipment can not be deleted,because it is an active shipment!')" class="btn btn-secondary btn-circle waves-effect waves-light"><span class="fa fa-trash"></span></a>
+                            	@else
+                            	<a href="{{route('delete_shipment',$item->id)}}" onclick="javascript: return confirm('Dou you want to delte this container ?')" class="btn btn-warning btn-circle waves-effect waves-light"><span class="fa fa-trash"></span></a>
+                            	@endif
+
                             </td>
                             <td>
                             	<a href="{{route('duplicate_shipment',$item->id)}}" class="btn btn-info btn-rounded">Duplicate</a>
@@ -119,6 +131,9 @@
 					<tr>
 						<th>#</th>
 						<th>Edit</th>
+						@if($status !='10')
+						<th>Select</th>
+						@endif
 						<th>BOL</th>
 						<th>DR</th>
 						<th>Photo link</th>
@@ -135,7 +150,6 @@
 						<th>Loading date</th>
 						<th>ETD</th>
 						<th>ETA</th>
-						<th>Track container</th>
 						<th>Invoice</th>
 						<th>Amount</th>
 						@if($status==1)
@@ -144,7 +158,7 @@
 						@if($status==10)
 						<th>Customer form</th>
 						@endif
-						@if($status !=1 || $status !=2 || $status!=10)
+						@if($status !=1 and $status !=2 and $status!=10)
 						<th>Vessel name</th>
 						@endif
 						@if($status==10)

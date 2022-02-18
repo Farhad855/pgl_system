@@ -34,7 +34,7 @@
 		<link rel="stylesheet" href="{{asset('assets/DataTables/Buttons/css/bu ttons.bootstrap4.min.css')}}"> -->
 		<!-- Neptune CSS -->
 		<link rel="stylesheet" href="{{asset('assets/css/core.css')}}">
-		<style type="text/css">
+		<!-- <style type="text/css">
 			div.dataTables_filter label{
 				display: none !important;
 			}
@@ -48,7 +48,7 @@
 			 div.dataTables_info,div.dataTables_paginate{
 			 	display: none !important;
 			 }
-		</style>
+		</style> -->
 		 @yield('style')
 	</head>
 	<body class="fixed-sidebar fixed-header skin-default content-appear">
@@ -87,7 +87,16 @@
 								<span class="s-text">Vehicles</span>
 							</a>
 							<ul>
-								<li><a href="{{route('all_vehicle_admin')}}">All 
+								<li>
+									<a href="{{url('add_vehicle')}}">Add new</a>
+								</li>
+								<li>
+									<a href="{{route('tow_cost_report_admin')}}" class="waves-effect  waves-light">
+										<span class="s-text">Tow Cost Report</span>
+									</a>
+								</li>
+								<li>
+									<a href="{{route('all_vehicle_admin')}}">All 
 								<span class="tag tag-warning t_all_vehicle" style="float:right;">0</span> 
 								</a>
 								</li>
@@ -103,6 +112,9 @@
 								<li><a href="{{route('vehicle_cost_analysis_admin')}}">Cost anlysis</a>
 								</li>
 								<li><a href="{{route('dateline_vehicle_admin')}}">Datelines</a>
+								</li>
+								<li>
+									<a href="{{url('vehicle_summary')}}">Summary</a>
 								</li>
 							</ul>
 						</li>
@@ -169,7 +181,11 @@
 								</li>
 								<li><a href="{{route('shipment_admin',['9','10'])}}">Submit Si <span class="tag tag-warning t_submitsi_ship" style="float:right;">0</span></a></li>
 								<li><a href="{{route('shipment_admin',['1','10'])}}">On the way <span class="tag tag-warning t_on_the_way_ship" style="float:right;">0</span> </a></li>
-								<li><a href="{{route('shipment_admin',['2','10'])}}">Arrived <span class="tag tag-warning t_arrived_ship" style="float:right;">0</span></a></li>
+								<li><a href="{{route('shipment_admin',['2','10'])}}">Arrived <span class="tag tag-warning t_arrived_ship" style="float:right;">0</span></a>
+								</li>
+								<li>
+									<a href="{{route('shipment_summary')}}">Summary</a>
+								</li>
 							</ul>
 						</li>
 						<li class="with-sub">
@@ -207,15 +223,9 @@
 								<span class="s-text">Rates</span>
 							</a>
 							<ul>
-								<li><a href="{{route('shipping_rate_customer')}}">Shipping Rates</a></li>
-								<li><a href="{{route('towing_rate_customer')}}">Towing Rates</a></li>
+								<li><a href="{{route('shipping_rate_admin')}}">Shipping Rates</a></li>
+								<li><a href="{{route('towing_rate_admin')}}">Towing Rates</a></li>
 							</ul>
-						</li>
-						<li>
-							<a href="calendar.html" class="waves-effect  waves-light">
-								<span class="s-icon"><i class="ti-calendar"></i></span>
-								<span class="s-text">Help desk</span>
-							</a>
 						</li>
 						<li class="with-sub">
 							<a href="#" class="waves-effect  waves-light">
@@ -224,8 +234,8 @@
 								<span class="s-text">Setting</span>
 							</a>
 							<ul>
-								<li><a href="frontend.html">Locations</a></li>
-								<li><a href="frontend2.html">Status</a></li>
+								<li><a href="{{route('location_admin')}}">Locations</a></li>
+								<li><a href="{{route('status_admin')}}">Status</a></li>
 							</ul>
 						</li>
 						<li class="with-sub">
@@ -235,11 +245,17 @@
 								<span class="s-text">Report center</span>
 							</a>
 							<ul>
-								<li><a href="charts-chartjs.html">Customer report</a></li>
-								<li><a href="charts-chartist.html">Vehicle report</a></li>
-								<li><a href="charts-easy.html">Shipment report</a></li>
-								<li><a href="charts-flot.html">Invoice report</a></li>
+								<li><a href="#">Customer report</a></li>
+								<li><a href="#">Vehicle report</a></li>
+								<li><a href="#">Shipment report</a></li>
+								<li><a href="#">Invoice report</a></li>
 							</ul>
+						</li>
+						<li>
+							<a href="{{route('pgl_profile')}}" class="waves-effect  waves-light">
+								<span class="s-icon"><i class="ti-calendar"></i></span>
+								<span class="s-text">PGL Profile</span>
+							</a>
 						</li>
 						<!-- <li class="with-sub">
 							<a href="#" class="waves-effect  waves-light">
@@ -263,7 +279,7 @@
 						<a class="navbar-brand" href="#">
 							<div class="avatar" style="font-size: 14px;">
 								<i class="status bg-success"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<span class="text-warning">{{session('username')}}</span>
+								<span class="text-warning">{{Auth::guard('admin')->user()->username}}</span>
 							</div>
 						</a>
 						<div class="toggle-button dark sidebar-toggle-first float-xs-left hidden-md-up">
@@ -286,7 +302,7 @@
 									<i class="ti-email message_admin"></i>
 									<span class="hidden-md-up ml-1">Notifications</span>
 									<span class="tag tag-danger top count_message_admin"><?=DB::table('notifications')
-								        ->where(['customer_id'=>Auth::id(),'type'=>1,'status'=>0])->count();
+								        ->where(['customer_id'=>Auth::guard('admin')->id(),'type'=>1,'status'=>0])->count();
 							        ?></span>
 								</a>
 								<div class="dropdown-messages dropdown-tasks dropdown-menu dropdown-menu-right animated fadeInUp meessage_admin_detail">
@@ -304,7 +320,7 @@
 							<li class="nav-item dropdown hidden-sm-down">
 								<a href="#" data-toggle="dropdown" aria-expanded="false">
 									<span class="avatar box-32">
-										<img src="{{ url('profile.customer', session('photo'))}}" onerror="this.src='{{asset('img/avatars/profile.png')}}'"/>
+										<img src="{{ url('profile.customer',Auth::guard('admin')->user()->photo)}}" onerror="this.src='{{asset('img/avatars/profile.png')}}'"/>
 									</span>
 								</a>
 								<div class="dropdown-menu dropdown-menu-right animated fadeInUp">
@@ -345,8 +361,8 @@
 		</div>
 
 		<!-- Vendor JS -->
-		<!-- <script type="text/javascript" src="{{asset('assets/jquery/jquery-1.12.3.min.js')}}">
-		</script> -->
+		<!-- <script type="text/javascript" src="{{asset('assets/jquery/jquery-2.2.4.min.js')}}"> -->
+		</script>
 		<script type="text/javascript" src="{{asset('assets/js/jquery-3.6.0.min.js')}}">
 		</script>
 		<script type="text/javascript" src="{{asset('assets/jquery-plugin/tableHTMLExport.js')}}"></script>
@@ -362,10 +378,6 @@
 		<script type="text/javascript" src="{{asset('assets/jquery-fullscreen-plugin/jquery.fullscreen-min.js')}}"></script>
 		<script type="text/javascript" src="{{asset('assets/waves/waves.min.js')}}"></script>
 		<script type="text/javascript" src="{{asset('assets/switchery/dist/switchery.min.js')}}"></script>
-		<!-- <script type="text/javascript" src="{{asset('assets/flot/jquery.flot.min.js')}}"></script>
-		<script type="text/javascript" src="{{asset('assets/flot/jquery.flot.resize.min.js')}}"></script>
-		<script type="text/javascript" src="{{asset('assets/flot.tooltip/js/jquery.flot.tooltip.min.js')}}"></script>
-		<script type="text/javascript" src="{{asset('assets/CurvedLines/curvedLines.js')}}"></script> -->
 		<script type="text/javascript" src="{{asset('assets/TinyColor/tinycolor.js')}}"></script>
 		<script type="text/javascript" src="{{asset('assets/sparkline/jquery.sparkline.min.js')}}"></script>
 		<script type="text/javascript" src="{{asset('assets/raphael/raphael.min.js')}}"></script>
@@ -374,40 +386,16 @@
 		<script type="text/javascript" src="{{asset('assets/jvectormap/jquery-jvectormap-world-mill.js')}}"></script>
 		<script type="text/javascript" src="{{asset('assets/peity/jquery.peity.js')}}"></script>
 		<script type="text/javascript" src="{{asset('assets/select2/dist/js/select2.min.js')}}"></script>
-		<!-- js for table -->
-		 <script type="text/javascript" src="{{asset('assets/DataTables/js/jquery.dataTables.min.js')}}"></script>
 
-		 
-
-		 <!-- before commented -->
-		<!-- <script type="text/javascript" src="{{asset('assets/DataTables/js/dataTables.bootstrap4.min.js')}}"></script>
-		<script type="text/javascript" src="{{asset('assets/DataTables/Responsive/js/dataTables.responsive.min.js')}}"></script>
-		<script type="text/javascript" src="{{asset('assets/DataTables/Responsive/js/responsive.bootstrap4.min.js')}}"></script> -->
-		
-
-
-
-
-
-		<!-- <script type="text/javascript" src="{{asset('assets/DataTables/Buttons/js/dataTables.buttons.min.js')}}"></script>
-		<script type="text/javascript" src="{{asset('assets/DataTables/Buttons/js/buttons.bootstrap4.min.js')}}"></script> 
-		<script type="text/javascript" src="{{asset('assets/DataTables/JSZip/jszip.min.js')}}"></script>
-		<script type="text/javascript" src="{{asset('assets/DataTables/pdfmake/build/pdfmake.min.js')}}"></script>
-		<script type="text/javascript" src="{{asset('assets/DataTables/pdfmake/build/vfs_fonts.js')}}"></script>
-		<script type="text/javascript" src="{{asset('assets/DataTables/Buttons/js/buttons.html5.min.js')}}"></script> -->
-
-
-         <!--before commented  -->
-		<!-- <script type="text/javascript" src="{{asset('assets/DataTables/Buttons/js/buttons.print.min.js')}}"></script>
-		<script type="text/javascript" src="{{asset('assets/DataTables/Buttons/js/buttons.colVis.min.js')}}"></script> -->
-		
-		<script type="text/javascript" src="{{asset('assets/js/tables-datatable.js')}}"></script> 
-
+		<!-- <script type="text/javascript" src="{{asset('assets/jquery-wizard/libs/formvalidation/formValidation.min.js')}}"></script>
+		<script type="text/javascript" src="{{asset('assets/jquery-wizard/libs/formvalidation/bootstrap.min.js')}}"></script> -->
 
 		<!-- Neptune JS -->
 		<script type="text/javascript" src="{{asset('assets/js/app.js')}}"></script>
-		<!-- <script type="text/javascript" src="{{asset('assets/js/demo.js')}}"></script> -->
+		<script type="text/javascript" src="{{asset('assets/js/demo.js')}}"></script>
+		<!-- <script type="text/javascript" src="{{asset('assets/js/forms-wizard.js')}}"></script> -->
 		<script type="text/javascript" src="{{asset('assets/js/index.js')}}"></script>
+
 		@yield('js')
 		<script type="text/javascript">
 				var request = $.ajax({
@@ -458,6 +446,60 @@
 		            	alert(textStatus);
 		            });
 	           });
+		</script>
+		<script>
+			$(document).ready(function(){
+				$('th').each(function (col) {
+            $(this).hover(
+                    function () {
+                        $(this).addClass('focus');
+                    },
+                    function () {
+                        $(this).removeClass('focus');
+                    }
+            );
+            $(this).click(function () {
+                if ($(this).is('.asc')) {
+                    $(this).removeClass('asc');
+                    $(this).addClass('desc selected');
+                    sortOrder = -1;
+                } else {
+                    $(this).addClass('asc selected');
+                    $(this).removeClass('desc');
+                    sortOrder = 1;
+                }
+                $(this).siblings().removeClass('asc selected');
+                $(this).siblings().removeClass('desc selected');
+                var arrData = $('table').find('tbody >tr:has(td)').get();
+                arrData.sort(function (a, b) {
+                    var val1 = $(a).children('td').eq(col).text().toUpperCase();
+                    var val2 = $(b).children('td').eq(col).text().toUpperCase();
+                    if ($.isNumeric(val1) && $.isNumeric(val2))
+                        return sortOrder == 1 ? val1 - val2 : val2 - val1;
+                    else
+                        return (val1 < val2) ? -sortOrder : (val1 > val2) ? sortOrder : 0;
+                });
+                $.each(arrData, function (index, row) {
+                    $('tbody').append(row);
+                });
+            });
+        });
+	       $('.excel').click(function(){
+		       $("#example").tableHTMLExport({
+				  type:'csv',
+				  filename:'sample.csv',
+				  separator: ',',
+				  newline: '\r\n',
+				  trimContent: true,
+				  quoteFields: true,
+				  ignoreColumns: '.column',
+				  ignoreRows: '.bottom',
+				  htmlContent: false,
+				  consoleLog:false,
+				});
+	       });
+
+		});
 		</script>
 	</body>
 </html>

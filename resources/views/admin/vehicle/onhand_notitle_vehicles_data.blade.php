@@ -1,5 +1,5 @@
 			<table class="table table-bordered">
-				<thead class="bg-primary">
+				<thead class="bg-info">
 					<tr>
 						<th>#</th>
 						<th>Photo</th>

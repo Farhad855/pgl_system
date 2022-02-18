@@ -1,5 +1,5 @@
 			<table class="table table-bordered">
-				<thead class="bg-primary">
+				<thead class="bg-info">
 					<tr>
 						<th>#</th>
 						<th>Photo</th>
@@ -83,7 +83,7 @@
                             @endif
                         </td>
 						<td><span class="tag tag-success">{{@$veh->location}} </span></td>
-						<td><a href="" class="btn btn-primary"><span class="fa fa-pencil"></span></a></td>
+						<td><a href="" class="btn btn-warning btn-circle"><span class="fa fa-pencil"></span></a></td>
 					</tr>
 					@endforeach
 				</tbody>

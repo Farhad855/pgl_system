@@ -11,8 +11,8 @@ Route::post('/authenticate','LoginController@authenticate')->name('authenticate'
 // Auth::routes(['register' => false]);
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/dashboard','HomeController@dashboard')->name('dashboard');
-Route::get('/shipment_summary','HomeController@shipment_summary')->name('shipment_summary_customer');
-Route::get('/vehicle_summary','HomeController@vehicle_summary')->name('vehicle_summary_customer');
+Route::get('/shipment_summary_customer','HomeController@shipment_summary')->name('shipment_summary_customer');
+Route::get('/vehicle_summary_customer','HomeController@vehicle_summary')->name('vehicle_summary_customer');
 Route::get('/veh_ship_inv_total', 'HomeController@veh_ship_inv_total')->name('veh_ship_inv_total_customer');
 Route::get('/message','HomeController@message')->name('message_customer');
 

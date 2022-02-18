@@ -10,18 +10,15 @@ use PDF;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 
 class VehicleController extends Controller
 {
     protected $vehicle;
     public function __construct(VehicleModel $vehicle)
     {
-        if(empty(session('access')))
-        {
-            return view('admin/auth/login');
-        }
+        $this->middleware('auth:admin');  
         $this->vehicle=$vehicle;
-
     }
 
     /**
@@ -46,9 +43,17 @@ class VehicleController extends Controller
                   "vehicles.color",
                   "vehicles.file",
                   "vehicles.is_key",
+                  "vehicles.carstate_id",
+                  "vehicles.car_keys",
+                  "vehicles.radio",
                   "vehicles.customer_note",
+                  "vehicles.htnumber",  
+                  "vehicles.title_number",
+                  "vehicles.title_state",
                   "locations.location",
-                  "carstates.type"      
+                  "carstates.type",
+                  "companies.name"
+
             )
         // ->rightJoin('vehicles','vehicles.id','=','tbl_bases.vehicle_id')
         // ->leftJoin('containers','containers.id','=','tbl_bases.container_id')
@@ -56,6 +61,7 @@ class VehicleController extends Controller
          // ->join('containers','containers.id','=','tbl_bases.container_id')
         ->join('locations','locations.id','=','vehicles.ploading')
         ->join('carstates','carstates.id','=','vehicles.carstate_id')
+        ->join('companies','companies.id','=','vehicles.company_id')    
         ->orderBy('vehicles.id','desc')
         ->paginate(20);
          return view('admin.vehicle.all_vehicles',['vehicles'=>$vehicles,'paginate'=>20]);
@@ -82,10 +88,16 @@ class VehicleController extends Controller
                   "vehicles.color",
                   "vehicles.file",
                   "vehicles.is_key",
+                  "vehicles.carstate_id",
+                  "vehicles.car_keys",
+                  "vehicles.radio",
                   "vehicles.customer_note",
+                  "vehicles.htnumber",  
+                  "vehicles.title_number",
+                  "vehicles.title_state",
                   "locations.location",
                   "carstates.type",
-                  "companies.name as company_name"      
+                  "companies.name"      
             )
         ->join('locations','locations.id','=','vehicles.ploading')
         ->join('carstates','carstates.id','=','vehicles.carstate_id')
@@ -115,12 +127,21 @@ class VehicleController extends Controller
                   "vehicles.color",
                   "vehicles.file",
                   "vehicles.is_key",
+                  "vehicles.carstate_id",
+                  "vehicles.car_keys",
+                  "vehicles.radio",
                   "vehicles.customer_note",
+                  "vehicles.htnumber",  
+                  "vehicles.title_number",
+                  "vehicles.title_state",
+                  "companies.name",
+
             "tbl_bases.vehicle_id","tbl_bases.container_id","containers.container_number","containers.booking_number","containers.eta_port_discharge","containers.etd_port_loading","locations.location","carstates.type")
         ->rightJoin('vehicles','vehicles.id','=','tbl_bases.vehicle_id')
         ->leftJoin('containers','containers.id','=','tbl_bases.container_id')
         ->join('locations','locations.id','=','vehicles.ploading')
         ->join('carstates','carstates.id','=','vehicles.carstate_id')
+        ->join('companies','companies.id','=','vehicles.company_id')
         ->where('containers.container_number','like','%'.$searchQuery.'%')
         ->orderBy('vehicles.id','desc')->paginate($pagination); 
        } 
@@ -149,12 +170,20 @@ class VehicleController extends Controller
                   "vehicles.color",
                   "vehicles.file",
                   "vehicles.is_key",
+                  "vehicles.carstate_id",
+                  "vehicles.car_keys",
+                  "vehicles.radio",
                   "vehicles.customer_note",
+                  "vehicles.htnumber",  
+                  "vehicles.title_number",
+                  "vehicles.title_state",
                   "locations.location",
-                  "carstates.type"      
+                  "carstates.type",
+                  "companies.name"      
             )
         ->join('locations','locations.id','=','vehicles.ploading')
         ->join('carstates','carstates.id','=','vehicles.carstate_id')
+        ->join('companies','companies.id','=','vehicles.company_id')
         ->orderBy('vehicles.id','desc')
         ->paginate($paginate); 
         return view('admin.vehicle.all_vehicles_data',compact('vehicles','paginate'))->render();
@@ -183,12 +212,20 @@ class VehicleController extends Controller
                   "vehicles.color",
                   "vehicles.file",
                   "vehicles.is_key",
+                  "vehicles.carstate_id",
+                  "vehicles.car_keys",
+                  "vehicles.radio",
                   "vehicles.customer_note",
+                  "vehicles.htnumber",  
+                  "vehicles.title_number",
+                  "vehicles.title_state",
                   "locations.location",
-                  "carstates.type"      
+                  "carstates.type",
+                  "companies.name"      
             )
         ->join('locations','locations.id','=','vehicles.ploading')
         ->join('carstates','carstates.id','=','vehicles.carstate_id')
+        ->join('companies','companies.id','=','vehicles.company_id')
         ->orderBy('vehicles.id','desc')
         ->paginate($paginate); 
         return view('admin.vehicle.all_vehicles_data',compact('vehicles','paginate'))->render();
@@ -813,6 +850,137 @@ class VehicleController extends Controller
       }
     }
 
+    // tow cost report 
+    public function tow_cost_report()
+    {
+         $vehicles=DB::table('vehicles')
+         ->select(
+            "vehicles.id",
+             "vehicles.vin",
+              "vehicles.lot_number",
+               "vehicles.towed_from",
+                  "vehicles.deliver_date",
+                  "vehicles.year",
+                  "vehicles.make",
+                  "vehicles.model",
+                  "vehicles.color",
+                  "vehicles.tow_amount",
+                  "vehicles.tow_amounts",
+                  "vehicles.carstate_id",
+                  "vehicles.htnumber",  
+                  "locations.location",
+                  "companies.name"
+            )
+        ->join('locations','locations.id','=','vehicles.ploading')
+        ->join('carstates','carstates.id','=','vehicles.carstate_id')
+        ->join('companies','companies.id','=','vehicles.company_id')    
+        ->orderBy('vehicles.id','desc')
+        ->paginate(20);
+         return view('admin.vehicle.tow_cost_report',['vehicles'=>$vehicles,'paginate'=>20]);
+
+    }
+    public function search_tow_cost_report(Request $request)
+    {
+        $pagination=20;
+        $searchQuery = trim($request['searchValue']);
+        $requestData = ['vehicles.vin', 'vehicles.towed_from','locations.location','companies.name'];
+        if($request->ajax()){
+       $vehicle=DB::table('vehicles')
+         ->select(
+            "vehicles.id",
+             "vehicles.vin",
+              "vehicles.lot_number",
+               "vehicles.towed_from",
+                  "vehicles.deliver_date",
+                  "vehicles.year",
+                  "vehicles.make",
+                  "vehicles.model",
+                  "vehicles.color",
+                  "vehicles.tow_amount",
+                  "vehicles.tow_amounts",
+                  "vehicles.carstate_id",
+                  "vehicles.htnumber",  
+                  "locations.location",
+                  "companies.name"
+            )
+        ->join('locations','locations.id','=','vehicles.ploading')
+        ->join('carstates','carstates.id','=','vehicles.carstate_id')
+        ->join('companies','companies.id','vehicles.company_id');
+        if($searchQuery!=''){
+         $pagination=20000;
+        $vehicle->where(function($q) use($requestData, $searchQuery) {
+                foreach ($requestData as $field)
+                 $q->orWhere($field, 'like', "%{$searchQuery}%");
+          });
+        }
+       $vehicles=$vehicle->orderBy('vehicles.id','desc')->paginate($pagination);
+       // dd($vehicles[0]);
+       if($vehicles[0]==null){
+        $vehicles=DB::table('tbl_bases')
+        ->select(
+            "vehicles.id",
+             "vehicles.vin",
+              "vehicles.lot_number",
+               "vehicles.towed_from",
+                  "vehicles.deliver_date",
+                  "vehicles.year",
+                  "vehicles.make",
+                  "vehicles.model",
+                  "vehicles.color",
+                  "vehicles.tow_amount",
+                  "vehicles.tow_amounts",
+                  "vehicles.carstate_id",
+                  "vehicles.htnumber",  
+                  "locations.location",
+                  "companies.name",
+
+            "tbl_bases.vehicle_id","tbl_bases.container_id","containers.container_number","containers.booking_number","containers.eta_port_discharge","containers.etd_port_loading","locations.location","carstates.type")
+        ->rightJoin('vehicles','vehicles.id','=','tbl_bases.vehicle_id')
+        ->leftJoin('containers','containers.id','=','tbl_bases.container_id')
+        ->join('locations','locations.id','=','vehicles.ploading')
+        ->join('carstates','carstates.id','=','vehicles.carstate_id')
+        ->join('companies','companies.id','=','vehicles.company_id')
+        ->where('containers.container_number','like','%'.$searchQuery.'%')
+        ->orderBy('vehicles.id','desc')->paginate($pagination); 
+       } 
+        return view('admin.vehicle.tow_cost_report_data',compact('vehicles'))->render();
+      }
+    }
+    public function paginate_tow_cost_report(Request $request)
+    {
+        $paginate=20;
+        if($request['paginate']){
+          $paginate= $request['paginate'];
+        }
+        if($request->ajax()){
+       $vehicles=DB::table('vehicles')
+         ->select(
+            "vehicles.id",
+             "vehicles.vin",
+              "vehicles.lot_number",
+               "vehicles.towed_from",
+                  "vehicles.deliver_date",
+                  "vehicles.year",
+                  "vehicles.make",
+                  "vehicles.model",
+                  "vehicles.color",
+                  "vehicles.tow_amount",
+                  "vehicles.tow_amounts",
+                  "vehicles.carstate_id",
+                  "vehicles.htnumber",  
+                  "locations.location",
+                  "companies.name"
+            )
+        ->join('locations','locations.id','=','vehicles.ploading')
+        ->join('carstates','carstates.id','=','vehicles.carstate_id')
+        ->join('companies','companies.id','=','vehicles.company_id')
+        ->orderBy('vehicles.id','desc')
+        ->paginate($paginate); 
+        return view('admin.vehicle.tow_cost_report_data',compact('vehicles','paginate'))->render();
+      }
+    }
+
+
     // find vehicle base on location and status
     public function vehicle_base_location_and_status($location_id='',$status='')
     {
@@ -837,7 +1005,7 @@ class VehicleController extends Controller
             )
         ->join('locations','locations.id','=','vehicles.ploading')
         ->join('carstates','carstates.id','=','vehicles.carstate_id')
-        ->where('vehicles.customer_id',Auth::id())
+        // ->where('vehicles.customer_id',Auth::id())
         ->where('locations.id',$location_id)
        ->orderBy('vehicles.id','desc');
        if($status!='10'){
@@ -874,8 +1042,8 @@ class VehicleController extends Controller
             )
         ->join('locations','locations.id','=','vehicles.ploading')
         ->join('carstates','carstates.id','=','vehicles.carstate_id')
-        ->where('locations.id',$request['location_id'])
-        ->where('vehicles.customer_id',Auth::id());
+        ->where('locations.id',$request['location_id']);
+        // ->where('vehicles.customer_id',Auth::id());
         if($status!='10'){
         $vehicle->where('carstates.id',$status);
        }
@@ -919,7 +1087,7 @@ class VehicleController extends Controller
             )
         ->join('locations','locations.id','=','vehicles.ploading')
         ->join('carstates','carstates.id','=','vehicles.carstate_id')
-        ->where('vehicles.customer_id',Auth::id())
+        // ->where('vehicles.customer_id',Auth::id())
         // ->where('carstates.id',$request['status'])
         ->where('locations.id',$request['location_id'])
         ->orderBy('vehicles.id','desc');
@@ -933,8 +1101,8 @@ class VehicleController extends Controller
 
     public function vehicle_condational_report($id='')
     {
-       $vehicle = $this->vehicle::find($id);
-        return view('customer.vehicle.vehicle_condational_report', ['signle_vehicle' =>$vehicle]); 
+       $vehicle = VehicleModel::find($id);
+        return view('admin.vehicle.vehicle_condational_report', ['signle_vehicle' =>$vehicle]); 
     }
 
     public function addnote_for_vehicle(Request $request)
@@ -948,7 +1116,6 @@ class VehicleController extends Controller
             echo json_encode(false);
          }
     }
-
     public function vehicle_pdf($name='')
     {
        $vehicles=DB::table('tbl_bases')
@@ -970,7 +1137,7 @@ class VehicleController extends Controller
         ->join('containers','containers.id','=','tbl_bases.container_id')
         ->join('locations','locations.id','=','vehicles.ploading')
         ->join('carstates','carstates.id','=','vehicles.carstate_id')
-        ->where('vehicles.customer_id',Auth::id())
+        // ->where('vehicles.customer_id',Auth::id())
         ->orderBy('vehicles.id','desc')
         ->paginate(20);
 
@@ -1002,7 +1169,7 @@ class VehicleController extends Controller
             ->join('containers','containers.id','=','tbl_bases.container_id')
             ->join('locations','locations.id','=','vehicles.ploading')
             ->join('carstates','carstates.id','=','vehicles.carstate_id')
-            ->where('vehicles.customer_id',Auth::id())
+            // ->where('vehicles.customer_id',Auth::id())
             ->orderBy('vehicles.id','desc')
             ->paginate(20);
 
@@ -1013,12 +1180,438 @@ class VehicleController extends Controller
      function vehicle_photo($id=''){
           $data=DB::table('vehicles')->where('id',$id)->first();
            $link=$data->link;
-           return view('customer.vehicle.vehicle_photo')->with(['id'=> $id,'link'=>$link]);  
+           return view('admin.vehicle.vehicle_photo')->with(['id'=> $id,'link'=>$link]);  
      }
 
      function delete_vehicle($id=''){
         $data=DB::table('vehicles')->where('id',$id)->delete();
         return redirect()->back()->with('deleted','success');
      }
+
+     // vehicle summary section 
+     public function vehicle_summary(Request $request)
+     {  
+          $location_id=1;
+          $view='vehicle_summary';
+          $locations= DB::table('locations')->get();
+
+          if($request['status']){
+            $status=$request['status'];
+            if($status==2){
+                $status=0;
+            }
+              $customer = DB::table('customers')
+             ->select('companies.*','customers.note')
+             ->rightJoin('companies','companies.id','=','customers.company_id');
+             if($status !=3){
+                $customer->where('customers.status',$status);
+              }
+            $customer->groupBy('companies.id');
+            $customers=$customer->get();
+            return view('admin.vehicle.vehicle_summary_data')
+            ->with(['customers' => $customers,'locations'=>$locations,'location'=>0,'status'=>$request['status']]);
+        }
+
+          if($request['location_id']){
+            // dd($request['location']);
+           $location_id=$request['location_id'];
+           $view='vehicle_summary_data';
+
+           if($location_id==8){
+             $customers = DB::table('customers')
+             ->select('companies.*','customers.note')
+             ->rightJoin('companies','companies.id','=','customers.company_id')
+             ->groupBy('companies.id')
+             ->get();
+            return view('admin.vehicle.vehicle_summary_data')
+            ->with(['customers' => $customers,'locations'=>$locations,'location'=>0]);
+           }
+           else{
+            $customers = DB::table('customers')
+             ->select('companies.*','customers.note')
+             ->rightJoin('companies','companies.id','=','customers.company_id')
+             ->groupBy('companies.id')
+             ->get();
+            return view('admin.vehicle.vehicle_summary_data')
+            ->with(['customers' => $customers,'locations'=>$locations,'location'=>$location_id]);
+            }
+        }
+        else
+        {
+            $customers = DB::table('customers')
+             ->select('companies.*','customers.note')
+             ->rightJoin('companies','companies.id','=','customers.company_id')
+             ->groupBy('companies.id')
+             ->get();
+            return view('admin.vehicle.'.$view)
+            ->with(['customers' => $customers,'locations'=>$locations,'location'=>$location_id]);
+        }
+
+     }
+     public function vehicle_summary_search($company_id='',$status='',$location_id='')
+     {  
+        $vehicle=DB::table('vehicles')
+         ->select(
+            "vehicles.id","vehicles.link",
+             "vehicles.vin",
+              "vehicles.lot_number",
+               "vehicles.title_status",
+                "vehicles.c_remark",
+                 "vehicles.purchase_date",
+                  "vehicles.deliver_date",
+                  "vehicles.year",
+                  "vehicles.make",
+                  "vehicles.model",
+                  "vehicles.color",
+                  "vehicles.file",
+                  "vehicles.is_key",
+                  "vehicles.carstate_id",
+                  "vehicles.car_keys",
+                  "vehicles.radio",
+                  "vehicles.customer_note",
+                  "vehicles.htnumber",  
+                  "vehicles.title_number",
+                  "vehicles.title_state",
+                  "locations.location",
+                  "carstates.type",
+                  "companies.name"
+
+            )
+        ->join('locations','locations.id','=','vehicles.ploading')
+        ->join('carstates','carstates.id','=','vehicles.carstate_id')
+        ->join('companies','companies.id','=','vehicles.company_id')    
+        ->orderBy('vehicles.id','desc');
+        if($status=='10' and $company_id=='0'){
+            $vehicle->where(['vehicles.location_id'=>$location_id]);
+        }
+        else if($status=='0'){
+         $vehicle->where(['vehicles.company_id'=>$company_id,'vehicles.location_id'=>$location_id]);
+        }
+        else if($status=='10'){
+         $vehicle->where('vehicles.company_id', $company_id)->whereIn('vehicles.carstate_id',[1,2,3]);
+        }
+        else if($location_id=='8'){
+           $vehicle->where(['vehicles.company_id'=>$company_id,'vehicles.carstate_id'=> $status]) ; 
+        }
+        else if($company_id=='0'){
+            $vehicle->where(['vehicles.carstate_id'=> $status,'vehicles.location_id'=>$location_id]) ;
+        }
+        else{
+            $vehicle->where(['vehicles.company_id'=>$company_id,'vehicles.carstate_id'=> $status,'vehicles.location_id'=>$location_id]) ; 
+        }
+        $vehicles=$vehicle->paginate(100);
+         return view('admin.vehicle.vehicle_summary_search',['vehicles'=>$vehicles,'paginate'=>20]);
+
+     }
+
+     // adding vehicle 
+     public function add_vehicle()
+     {
+        $customers =DB::table('customers')->get();
+        $companies=DB::table('companies')->get();
+        $locations=DB::table('locations')->get();
+        return view('admin.vehicle.add_vehicle')->with(['companies'=>$companies,'customers'=>$customers,'locations'=>$locations]);
+     }
+     // inserting vehicle  
+     public function add_new_vehicle(Request $request)
+     {
+        $result=DB::table('vehicles')->where('vin',$request['vin'])->exists();
+        if($result){
+             return redirect()->back()->with('success', 'The vin number : '.$request['vin'].' already exists! ');
+        }
+        else {  
+            $this->validate($request, ['ploading' => 'required']);
+            $add_vehicle = new VehicleModel();
+            $add_vehicle->customer_id = $request['customer'];
+            $add_vehicle->location_id = $request['ploading'];
+            $add_vehicle->auction = $request['auc'];
+            $add_vehicle->auction_city = $request['aucity'];
+            $add_vehicle->year = $request['year'];
+            $add_vehicle->company_id = $request['company'];
+            $add_vehicle->cdname = $request['cdname'];
+            $add_vehicle->veh_descr = $request['desco'];
+            $add_vehicle->payment_date = $request['payment_date'];
+            $add_vehicle->shipas = $request['shipas'];
+            $add_vehicle->ploading = $request['ploading'];
+            $add_vehicle->inform = $request['inform'];
+            $add_vehicle->dport = $request['dport'];
+            $add_vehicle->buyer_number = $request['buyer_number'];
+             if (!empty($request->hasFile('file'))) {
+                 if ($request->hasFile('file')) {
+                     $photo = $request->file('file');
+                     $imagename = time() . '.' . $photo->getClientOriginalExtension();
+                     $destinationPath = public_path('images/file/');
+                     $photo->move($destinationPath, $imagename);
+                     $data['file'] = $imagename;
+                 }
+                 $add_vehicle->file = $imagename;
+             } else {
+                 $add_vehicle->file = 'nothing uploaded';
+             }
+            $add_vehicle->link = $request['photo-link'];
+            $add_vehicle->title_received_date = $request['trdate'];
+            $add_vehicle->title_number = $request['tnumber'];
+            $add_vehicle->title_state = $request['tstate'];
+            $add_vehicle->purchase_date = $request['purdate'];
+            $add_vehicle->rpgldate = $request['rpgldate'];
+            $add_vehicle->reported = $request['reported'];
+            $add_vehicle->towing_request_date = $request['towingrdate'];
+            $add_vehicle->pickup_date = $request['pdate'];
+            $add_vehicle->deliver_date = $request['ddate'];
+            $add_vehicle->color = $request['color'];
+            $add_vehicle->note = $request['note'];
+            $add_vehicle->vprice = $request['vprice'];
+            $add_vehicle->towed = $request['towed'];
+            $add_vehicle->towedby = $request['towedby'];
+            $add_vehicle->dpicd = $request['dpicd'];
+            $add_vehicle->title = $request['title'];
+            //$add_vehicle->age=$request['age'];
+            $add_vehicle->model = $request['model'];
+            $add_vehicle->vin = $request['vin'];
+            $add_vehicle->vehicle_price = $request['vehicle_price'];
+            $add_vehicle->auction_fee = $request['auction_fee'];
+            $add_vehicle->tow_amounts = $request['tow_amounts'];
+            $add_vehicle->dismantal_cost = $request['dcost'];
+            $add_vehicle->ship_cost = $request['shipcost'];
+            $add_vehicle->auction_storage_cost = $request['astoragecost'];
+            $add_vehicle->pgl_storage_costs = $request['pglscost'];
+            $add_vehicle->us_custom_cost = $request['uscost'];
+            $add_vehicle->us_demurage = $request['usd'];
+            $add_vehicle->dubai_custom_cost = $request['dcustomcost'];
+            $add_vehicle->dubai_storage_cost = $request['dstoragecost'];
+            $add_vehicle->dubai_demurage = $request['ddcost'];
+            $add_vehicle->other_cost = $request['othercost'];
+            if (!empty($request['totalcost'])) {
+                $add_vehicle->total_cost = $request['totalcost'];
+            } else {
+                $add_vehicle->total_cost = 0;
+            }
+            $add_vehicle->sales_cost = $request['salescost'];
+            $add_vehicle->profit = $request['profit'];
+            $add_vehicle->percent_profit = $request['percent'];
+            $add_vehicle->number_days_rep = $request['number_days_rep'];
+            $add_vehicle->number_days_pur = $request['number_days_pur'];
+            $add_vehicle->weight = $request['weight'];
+            $add_vehicle->towingcompany = $request['towingcompany'];
+            $add_vehicle->pgl_storage_cost = $request['pgl_storage_cost'];
+            $add_vehicle->value = $request['value'];
+            $add_vehicle->licence_number = $request['license'];
+            $add_vehicle->storage_amount = $request['stamount'];
+            $add_vehicle->htnumber = $request['htnumber'];
+            $add_vehicle->make = $request['make'];
+            $add_vehicle->check_number = $request['chnumber'];
+            $add_vehicle->add_charges = $request['acharges'];
+            $add_vehicle->lot_number = $request['lotn'];
+            $add_vehicle->towed_from = $request['towedf'];
+            $add_vehicle->tow_amount = $request['towamount'];
+            $add_vehicle->car_keys = $request['Keys'];
+            $add_vehicle->radio = $request['radio'];
+            $add_vehicle->casette = $request['casette'];
+            $add_vehicle->cd_player = $request['cdp'];
+            $add_vehicle->cd_charger = $request['cdch'];
+            $add_vehicle->floor_mat = $request['fmt'];
+            $add_vehicle->gps = $request['gns'];
+            $add_vehicle->mirror = $request['mirror'];
+            $add_vehicle->spare_tire = $request['stj'];
+            $add_vehicle->speaker = $request['speaker'];
+            $add_vehicle->wheel_covers = $request['wc'];
+            $add_vehicle->other = $request['other'];
+            $add_vehicle->txt1 = $request['txt1'];
+            $add_vehicle->txt2 = $request['txt2'];
+            $add_vehicle->txt3 = $request['txt3'];
+            $add_vehicle->txt4 = $request['txt4'];
+            $add_vehicle->txt5 = $request['txt5'];
+            $add_vehicle->txt6 = $request['txt6'];
+            $add_vehicle->txt7 = $request['txt7'];
+            $add_vehicle->txt8 = $request['txt8'];
+            $add_vehicle->txt9 = $request['txt9'];
+            $add_vehicle->txt10 = $request['txt10'];
+            $add_vehicle->txt11 = $request['txt11'];
+            $add_vehicle->txt12 = $request['txt12'];
+            $add_vehicle->txt13 = $request['txt13'];
+            $add_vehicle->txt14 = $request['txt14'];
+            $add_vehicle->txt15 = $request['txt15'];
+            $add_vehicle->txt16 = $request['txt16'];
+            $add_vehicle->txt17 = $request['txt17'];
+            $add_vehicle->txt18 = $request['txt18'];
+            $add_vehicle->txt19 = $request['txt19'];
+            $add_vehicle->txt20 = $request['txt20'];
+            $add_vehicle->txt21 = $request['txt21'];
+            $add_vehicle->pickup_due_date = $request['pickup_due_date'];
+             $add_vehicle->invoice_description = $request['invoice_description'];
+            $add_vehicle->user_id = Auth::guard('admin')->id();
+            $add_vehicle->save();
+            $data = $request->all();
+            Mail::send('emails.first', $data, function ($message)  {
+             $message->from('info@peacegl.com', 'Peace Global Logistics');
+             $message->to(Input::get('email'))->subject('STATUS -  ' . Input::get('year') . Input::get('make') . Input::get('model') . Input::get('color') . ' With  VIN#  ' . Input::get('vin') . '  ON THEY WAY To PGL');
+            });
+            return redirect()->route('all_vehicle_admin')->with('success', 'saved!');
+        }
+     }
+     // show vehicle for update
+     public function edit_vehicle($id='')
+     {
+        $vehicle=VehicleModel::find($id);
+        $customers =DB::table('customers')->get();
+        $companies=DB::table('companies')->get();
+        $locations=DB::table('locations')->get();
+        return view('admin.vehicle.edit_vehicle')->with(['vehicle'=>$vehicle,'companies'=>$companies,'customers'=>$customers,'locations'=>$locations]);
+     }
+
+     public function update_vehicle(Request $request)
+    {
+        $update_vehicles = VehicleModel::find($request['id']);
+        $update_vehicles->customer_id = $request['customer'];
+        $update_vehicles->location_id = $request['ploading'];
+        $update_vehicles->auction = $request['auc'];
+        $update_vehicles->auction_city = $request['aucity'];
+        $update_vehicles->cdname = $request['cdname'];
+        $update_vehicles->year = $request['year'];
+        $update_vehicles->company_id = $request['company'];
+        $update_vehicles->veh_descr = $request['desco'];
+        $update_vehicles->payment_date = $request['payment_date'];
+        $update_vehicles->shipas = $request['shipas'];
+        $update_vehicles->ploading = $request['ploading'];
+        $update_vehicles->dport = $request['dport'];
+        $update_vehicles->buyer_number = $request['buyer_number'];
+         if (!empty($request->hasFile('file'))) {
+             if ($request->hasFile('file')) {
+                 $photo = $request->file('file');
+                 $imagename = time() . '.' . $photo->getClientOriginalExtension();
+                 $destinationPath = public_path('images/file/');
+                 $photo->move($destinationPath, $imagename);
+                 $data['file'] = $imagename;
+             }
+             $update_vehicles->file = $imagename;
+         } else {
+             $update_vehicles->file = $request['fname'];
+         }
+        $update_vehicles->link = $request['photo-link'];
+        $update_vehicles->inform = $request['inform'];
+        $update_vehicles->title_received_date = $request['trdate'];
+        $update_vehicles->title_number = $request['tnumber'];
+        $update_vehicles->title_state = $request['tstate'];
+        $update_vehicles->purchase_date = $request['purdate'];
+        $update_vehicles->rpgldate = $request['rpgldate'];
+        $update_vehicles->reported = $request['reported'];
+        $update_vehicles->towing_request_date = $request['towingrdate'];
+        $update_vehicles->pickup_date = $request['pdate'];
+        $update_vehicles->deliver_date = $request['ddate'];
+        $update_vehicles->color = $request['color'];
+        $update_vehicles->note = $request['note'];
+        $update_vehicles->vprice = $request['vprice'];
+        $update_vehicles->towed = $request['towed'];
+        $update_vehicles->towedby = $request['towedby'];
+        $update_vehicles->dpicd = $request['dpicd'];
+        $update_vehicles->title = $request['title'];
+        //$update_vehicles->age=$request['age'];
+        $update_vehicles->model = $request['Model'];
+        $update_vehicles->vin = $request['vin'];
+        $update_vehicles->vehicle_price = $request['vehicle_price'];
+        $update_vehicles->auction_fee = $request['auction_fee'];
+        $update_vehicles->tow_amounts = $request['tow_amounts'];
+        $update_vehicles->dismantal_cost = $request['dcost'];
+        $update_vehicles->ship_cost = $request['shipcost'];
+        $update_vehicles->auction_storage_cost = $request['astoragecost'];
+        $update_vehicles->pgl_storage_costs = $request['pglscost'];
+        $update_vehicles->us_custom_cost = $request['uscost'];
+        $update_vehicles->us_demurage = $request['usd'];
+        $update_vehicles->dubai_custom_cost = $request['dcustomcost'];
+        $update_vehicles->dubai_storage_cost = $request['dstoragecost'];
+        $update_vehicles->dubai_demurage = $request['ddcost'];
+        $update_vehicles->other_cost = $request['othercost'];
+        if (!empty($request['totalcost'])) {
+            $update_vehicles->total_cost = $request['totalcost'];
+        } else {
+            $update_vehicles->total_cost = 0;
+        }
+        $update_vehicles->sales_cost = $request['salescost'];
+        $update_vehicles->profit = $request['profit'];
+        $update_vehicles->percent_profit = $request['percent'];
+        $update_vehicles->number_days_rep = $request['number_days_rep'];
+        $update_vehicles->number_days_pur = $request['number_days_pur'];
+        $update_vehicles->weight = $request['weight'];
+        $update_vehicles->towingcompany = $request['towingcompany'];
+        $update_vehicles->pgl_storage_cost = $request['pgl_storage_cost'];
+        $update_vehicles->value = $request['value'];
+        $update_vehicles->licence_number = $request['license'];
+        $update_vehicles->storage_amount = $request['stamount'];
+        $update_vehicles->htnumber = $request['htnumber'];
+        $update_vehicles->make = $request['make'];
+        $update_vehicles->check_number = $request['chnumber'];
+        $update_vehicles->add_charges = $request['acharges'];
+        $update_vehicles->lot_number = $request['lotn'];
+        $update_vehicles->towed_from = $request['towedf'];
+        $update_vehicles->tow_amount = $request['towamount'];
+        $update_vehicles->car_keys = $request['Keys'];
+        $update_vehicles->radio = $request['radio'];
+        $update_vehicles->casette = $request['casette'];
+        $update_vehicles->cd_player = $request['cdp'];
+        $update_vehicles->cd_charger = $request['cdch'];
+        $update_vehicles->floor_mat = $request['fmt'];
+        $update_vehicles->gps = $request['gns'];
+        $update_vehicles->mirror = $request['mirror'];
+        $update_vehicles->spare_tire = $request['stj'];
+        $update_vehicles->speaker = $request['speaker'];
+        $update_vehicles->wheel_covers = $request['wc'];
+        $update_vehicles->other = $request['other'];
+        $update_vehicles->txt1 = $request['txt1'];
+        $update_vehicles->txt2 = $request['txt2'];
+        $update_vehicles->txt3 = $request['txt3'];
+        $update_vehicles->txt4 = $request['txt4'];
+        $update_vehicles->txt5 = $request['txt5'];
+        $update_vehicles->txt6 = $request['txt6'];
+        $update_vehicles->txt7 = $request['txt7'];
+        $update_vehicles->txt8 = $request['txt8'];
+        $update_vehicles->txt9 = $request['txt9'];
+        $update_vehicles->txt10 = $request['txt10'];
+        $update_vehicles->txt11 = $request['txt11'];
+        $update_vehicles->txt12 = $request['txt12'];
+        $update_vehicles->txt13 = $request['txt13'];
+        $update_vehicles->txt14 = $request['txt14'];
+        $update_vehicles->txt15 = $request['txt15'];
+        $update_vehicles->txt16 = $request['txt16'];
+        $update_vehicles->txt17 = $request['txt17'];
+        $update_vehicles->txt18 = $request['txt18'];
+        $update_vehicles->txt19 = $request['txt19'];
+        $update_vehicles->txt20 = $request['txt20'];
+        $update_vehicles->txt21 = $request['txt21'];
+        $update_vehicles->pickup_due_date = $request['pickup_due_date'];
+        $update_vehicles->invoice_description = $request['invoice_description'];
+        $update_vehicles->user_id = Auth::guard('admin')->id();
+        $update_vehicles->update();
+        $product = DB::table('vehicles')->where('id', $request['id'])->first();
+        if (!empty($request->photos)) {
+            foreach ($request->photos as $photo) {
+                $imagename = strtotime("now") .rand(1,100).$photo->getClientOriginalName().'.' . $photo->getClientOriginalExtension();
+                $destinationPath = public_path('images/vehicle/');
+                $photo->move($destinationPath, $imagename);
+                $data['photo'] = $imagename;
+                DB::table('vehicle_images')->insert([
+                    'vehicle_id' => $product->id,
+                    'photo' => $imagename
+                ]);
+            }
+        }
+        if (!empty($request->container)) {
+            DB::table('tbl_bases')->insert([
+               'vehicle_id' => $product->id,
+               'container_id' => $request->container,
+               'user_id' => $_SESSION['access']
+           ]);
+
+        }
+        return redirect()->route('all_vehicle_admin')->with('success', 'saved!');
+    }
+
+    // find a customer vin to check if vin exist or no
+     public function singel_vehicle_vin(Request $request)
+    {
+      $vin=DB::table('vehicles')->where('vin',$request['vin'])->exists();
+        if($vin) echo true;
+        else echo false;
+    }
+
 
 }

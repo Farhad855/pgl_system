@@ -5,6 +5,9 @@
 						@if($status=='')
 						<th>Edit</th>
 						@endif
+						@if($status !='' and $status !='4')
+						<th> <input type="checkbox" id="check_all"> &nbsp;Select</th>
+						@endif
 						@if($status=='4')
 						<th>Approve</th>
 						@endif
@@ -42,6 +45,9 @@
                         	</a>
                         </td>
                         @endif
+                       @if($status !='' and $status !='4')
+						<td> <input type="checkbox" class="checkbox" data-id={{$invoice->id}}"> </td>
+						@endif
                         @if($status=='4')
                         <td>
                         	<a  class="btn btn-warning btn-circle" onclick="javascript:return confirm('Are you sure you want to approve ?')" href="{{route('approve_invoice',$invoice->id)}}"><span class="fa fa-check"></span>
@@ -59,10 +65,11 @@
 	                    <td>{{$invoice->rece_date}}</td>
 	                    @if($status !=3)
 	                    <td>${{$sumdue=$invoice->inv_amount - $invoice->payment_rece}}</td>
-	                    <td>@if($invoice->inv_amount - $invoice->payment_rece > 0 ) <?php $today=Carbon\Carbon::parse(Carbon\Carbon::today());
+	                    <td><span class="tag tag-danger">@if($invoice->inv_amount - $invoice->payment_rece > 0 ) <?php $today=Carbon\Carbon::parse(Carbon\Carbon::today());
 	                        $inv_date_ude=Carbon\Carbon::parse($invoice->inv_due_date);
 	                        if($today > $inv_date_ude){
 	                        echo $total=$today->diffInDays($inv_date_ude); } else{?>0<?php } ?> @else @endif
+	                    </span>
 	                   </td>
 	                   @endif
 	                   <td><a href="{{route('invoice_pdf_admin',$invoice->id)}}" target="_blank">PDF</a>
@@ -82,11 +89,14 @@
 						@if($status=='')
 						<th></th>
 						@endif
+						@if($status !='' and $status !='4')
+						<th></th>
+						@endif
 						@if($status=='4')
 						<th></th>
 						@endif
 						<th></th>
-						<th></th>
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th></th>

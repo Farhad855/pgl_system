@@ -1,4 +1,4 @@
-@extends('customer.layout.main')
+@extends('admin.layout.main')
 @section('title','Condational report')
 <style type="text/css">
     .condition_report {
@@ -258,7 +258,7 @@
     <div class="container-fluid"> 
     <div class="love condition_report " >
         <div class="top_processes ui-state-highlight">
-            <button type="button" class="btn btn-info" id="print"><i class="fa fa-print"></i>&nbsp;Print</button>&nbsp;
+            <button type="button" class="btn btn-info btn-rounded" id="print"><i class="fa fa-print"></i>&nbsp;Print</button>&nbsp;
         </div>
         <input type="hidden" name="id" value="{{isset($signle_vehicle)? $signle_vehicle->id : ''}}">
         <div class="cond_here">

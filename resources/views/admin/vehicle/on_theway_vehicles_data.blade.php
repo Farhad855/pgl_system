@@ -1,6 +1,6 @@
 
 			<table class="table table-bordered">
-				<thead class="bg-primary">
+				<thead class="bg-info">
 					<tr>
 						<th>#</th>
 						<th>Edit</th>
@@ -31,7 +31,8 @@
 					<tr id="searchBody">
 						<td>{{$id++}}</td>
 						<td>
-                            <a href="{{url('edit',$veh->id).'#step-2'}}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                        	<a href="{{url('edit_vehicle',$veh->id)}}" class="btn btn-info btn-circle waves-effect waves-light"><span class="fa fa-pencil"></span>
+                        	</a>
                         </td>
                         <td>
                         	<input type="checkbox" name="">
@@ -58,7 +59,7 @@
                         <td>{{$veh->pickup_due_date}}</td>
                         <td>{{$veh->pickup_date}}</td>
                         <td>{{$veh->number_days_pur}}</td>
-                        <td>{{$veh->number_days_rep}}</td>
+                        <td><span>{{$veh->number_days_rep}}</span></td>
 						<td><span class="tag tag-success">{{@$veh->location}}</span></td>
 					</tr>
 					@endforeach

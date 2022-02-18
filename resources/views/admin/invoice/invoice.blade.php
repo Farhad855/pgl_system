@@ -8,6 +8,12 @@
 			<div class="form-group col-md-3 col-lg-3 col-sm-6 col-xs-12" style="margin:1%">
 			 <input type="text" name="search" class="form-control b-a" placeholder="Search for ..." id="search">
 		   </div>
+		   @if($status !='' and $status !='4')
+		   <div class="form-group col-md-1 col-lg-1 col-sm-6 col-xs-12" style="margin:1%">
+				<button type="button" class="btn btn-warning btn-rounded mb-0-25 waves-effect waves-light" data-toggle="modal" data-target="#change_status"><b><i class="fa fa-info-circle"></i></b> Change Status
+				</button>
+		   </div>
+		  @endif
 		   <div class="form-group col-md-1 col-lg-1 col-sm-2 col-xs-12" style="margin:1%;float: right;">
 		   		<select class="form-control" id="showEntry">
 		   			<option value="20">20</option>
@@ -22,6 +28,7 @@
 		   </div>
 	<div class="site" id="user_data">
 		@include('admin.invoice.invoice_data')
+		@include('admin.invoice.change_status')
 	</div>
 </div>
 @stop
@@ -123,6 +130,64 @@
                 });
             });
         });
+
+       // change status section
+       $('#check_all').on('click', function(e) {
+			if($(this).is(':checked',true))  
+			{
+				$(".checkbox").prop('checked', true);  
+			} else {  
+				$(".checkbox").prop('checked',false);  
+			}  
+		});
+		$('.checkbox').on('click',function(){
+			if($('.checkbox:checked').length == $('.checkbox').length){
+				$('#check_all').prop('checked',true);
+			}else{
+				$('#check_all').prop('checked',false);
+			}
+		});
+
+		$('#change-all').on('click', function(e) {
+			var idsArr = [];  
+			$(".checkbox:checked").each(function() {  
+				idsArr.push($(this).attr('data-id'));
+			});
+			var status= $(".inv_status:checked").val(); 
+			if(status == null)
+			{
+				alert('Please select at least one status');return;
+			}
+			if(idsArr.length <=0)  
+			{  
+				alert("Please select atleast one record to change.");  
+			}  else {  
+				if(confirm("Are you sure, you want to change the selected invoice status ?")){  
+					var strIds = idsArr.join(","); 
+			$.ajax({
+				url: "{{ route('change_status_invoice') }}",
+				type: 'get',
+				headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+				data: {'ids':strIds,'status':status},
+				success: function (data) {
+				if (data['status']==true) {
+					$("#change_status").modal('hide');
+					$(".checkbox:checked").each(function() {  
+					$(this).parents("tr").remove();
+					});
+					alert(data['message']);
+				} else {
+					alert('Whoops Something went wrong!!');
+				}
+				},
+				error: function (data) {
+				alert(data.responseText);
+				}
+				});
+			}  
+		}  
+		});
+  
 
 	});
 </script>

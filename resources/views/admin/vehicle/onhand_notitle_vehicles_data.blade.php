@@ -1,4 +1,4 @@
-			<table class="table table-bordered">
+			<table class="table table-bordered" id="example">
 				<thead class="bg-info">
 					<tr>
 						<th>#</th>
@@ -17,7 +17,9 @@
                         <th>Auction</th>
                         <th>Auction City</th>
 						<th>Point of loading</th>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-status']))
 						<th>Select</th>
+						@endif
 					</tr>
 				</thead>
 				<tbody >
@@ -67,7 +69,11 @@
                         <td>{{$veh->auction}}</td>
                         <td>{{$veh->auction_city}}</td>
 						<td><span class="tag tag-success">{{@$veh->location}}</span></td>
-						<td><input type="checkbox" name="select"></td>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-status']))
+                        <td>
+                        	<input type="checkbox" class="checkbox" data-id="{{$veh->id}}"> 
+                        </td>
+                        @endif
 					</tr>
 					@endforeach
 				</tbody>
@@ -89,7 +95,9 @@
                         <th>Auction</th>
                         <th>Auction City</th>
 						<th>Point of loading</th>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-status']))
 						<th>Select</th>
+						@endif
 					</tr>
 				</tfoot>
 			</table>

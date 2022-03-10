@@ -19,6 +19,12 @@ Route::get('/company_data_admin','admin\CustomerController@company_data')->name(
 Route::get('/search_company','admin\CustomerController@search_company')->name('search_company_admin');
 Route::get('/paginat_company_admin','admin\CustomerController@paginate_company')->name('paginate_company_admin');
 Route::get('/delete_company_admin/{id}','admin\CustomerController@delete_company')->name('delete_company_admin');
+
+// Route::get('delete_company_admin/{id}', ['as' => 'delete_company_admin',
+//                               'uses' => 'admin\CustomerController@delete_company',
+//                               'middleware' => 'check:delete-customer']
+// );
+
 Route::post('/add_company_admin','admin\CustomerController@add_company')->name('add_company_admin');
 Route::post('/edit_company_admin','admin\CustomerController@edit_company')->name('edit_company_admin');
 
@@ -29,7 +35,8 @@ Route::get('/search_customer','admin\CustomerController@search_customer')->name(
 Route::get('/paginat_customer_admin','admin\CustomerController@paginate_customer')->name('paginate_customer_admin');
 Route::get('/delete_customer_admin/{id}','admin\CustomerController@delete_customer')->name('delete_customer_admin');
 Route::post('/add_customer_admin','admin\CustomerController@add_customer')->name('add_customer_admin');
-Route::post('/edit_customer_admin','admin\CustomerController@edit_customer')->name('edit_customer_admin');
+Route::get('/edit_customer_admin/{id}','admin\CustomerController@edit_customer')->name('edit_customer_admin');
+Route::post('/update_customer','admin\CustomerController@update_customer')->name('update_customer');
 Route::get('/single_customer_admin','admin\CustomerController@singel_customer')->name('single_customer_admin');
 
 
@@ -124,6 +131,11 @@ Route::get('/edit_vehicle/{id}','admin\VehicleController@edit_vehicle')->name('e
 Route::post('/update_vehicle','admin\VehicleController@update_vehicle')->name('update_vehicel');
 Route::get('/single_vehicle_vin','admin\VehicleController@singel_vehicle_vin')->name('single_vehicle_vin');
 
+// change vehicle status section 
+Route::get('/change_status_vehicle','admin\VehicleController@change_status_vehicle')->name('change_status_vehicle');
+Route::get('/change_on_hand_with_title_vehicle_status','admin\VehicleController@change_on_hand_with_title_vehicle_status');
+Route::get('/add_to_container','admin\VehicleController@add_to_container')->name('add_to_container');
+
 
 
 // Shipment section 
@@ -148,7 +160,9 @@ Route::get('/release_document_admin/{id}','admin\ShipmentController@release_docu
 Route::get('/change_status_shipment','admin\ShipmentController@change_status_shipment')->name('change_status_shipment');
 Route::get('/shipment_summary','admin\ShipmentController@shipment_summary')->name('shipment_summary');
 Route::get('/shipment_summary_search/{company_id}/{status}','admin\ShipmentController@shipment_summary_search')->name('shipment_summary_search');
-
+Route::get('/check_container_number','admin\ShipmentController@check_container_number')->name('check_container_number');
+Route::get('update_etd_date','admin\ShipmentController@update_etd_date');
+Route::get('update_eta_date','admin\ShipmentController@update_eta_date');
 
 // Invoices section 
 Route::get('/invoice_admin/{id}','admin\InvoiceController@view_invoice')->name('invoice_admin');
@@ -163,6 +177,7 @@ Route::get('/edit_invoice/{id}','admin\InvoiceController@edit_invoice')->name('e
 Route::post('/update_invoice','admin\InvoiceController@update_invoice')->name('update_invoice_admin');
 Route::get('/delete_invoice/{id}','admin\InvoiceController@delete_invoice')->name('delete_invoice_admin');
 Route::get('/change_status_invoice','admin\InvoiceController@change_status_invoice')->name('change_status_invoice');
+Route::get('/check_invoice_number','admin\InvoiceController@check_invoice_number')->name('check_invoice_number');
 
 // Shipping rate section 
 Route::get('/shipping_rate_admin','admin\RateController@view_shipping_rate')->name('shipping_rate_admin');
@@ -204,6 +219,16 @@ Route::get('/paginat_status_admin','admin\PglController@paginate_status')->name(
 Route::get('/delete_status_admin/{id}','admin\PglController@delete_status')->name('delete_status_admin');
 Route::post('/add_status_admin','admin\PglController@add_status')->name('add_status_admin');
 Route::post('/edit_status_admin','admin\PglController@edit_status')->name('edit_status_admin');
+
+// user section 
+Route::get('/user_admin','admin\UserController@user')->name('user_admin');
+Route::get('/user_data_admin','admin\UserController@user_data')->name('all_vehicle_data_admin');
+Route::get('/search_user','admin\UserController@search_user')->name('search_user_admin');
+Route::get('/paginat_user_admin','admin\UserController@paginate_user')->name('paginate_user_admin');
+Route::get('/delete_user_admin/{id}','admin\UserController@delete_user')->name('delete_user_admin');
+Route::post('/add_user_admin','admin\UserController@add_user')->name('add_user_admin');
+Route::post('/edit_user_admin','admin\UserController@edit_user')->name('edit_user_admin');
+
 
 
 

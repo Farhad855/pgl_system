@@ -70,10 +70,10 @@
 							<td class="column">
 								<a href="{{route('vehicle_condational_report_customer',$veh->id)}}" target="_blank" class="btn btn-primary"><span class="fa fa-eye"></span></a></td>
 							<td class="column">
-	                            @if($veh->file!="nothing uploaded")
-	                             <a  href="{{ route('auction_ivn_file.customer',$veh->file)}}" class="btn btn-primary" download="download"><i class="fa  fa-download"></i></a>
+	                           @if(strpos(@$veh->file,'http') === false)
+	                            <a href="javascript:;" class="btn btn-secondary btn-circle"><i class="fa  fa-link"></i></a>
 	                            @else
-                                 <a  href="javascript:;" class="btn btn-warning"><i class="fa  fa-download"></i></a>
+                                 <a target="_blank" href="{{$veh->file}}" class="btn btn-success btn-circle" download="download"><i class="fa  fa-link"></i></a>
                                 @endif
 							</td>
 							<td>
@@ -88,6 +88,7 @@
 							<th>#</th>
 							<th class="column">Photo</th>
 							<th class="column">Photo link</th>
+							<th>Key present</th>
 							<th>Vehicle Desc</th>
 							<th>Vin No</th>
 							<th>Lot No</th>

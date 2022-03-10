@@ -21,6 +21,8 @@ class CustomerController extends Controller
     // company section 
     public function company()
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','customer-management']))
+            return view('admin.error.403');
         $companies=DB::table('companies')
         ->orderBy('id','desc')
         ->paginate(20);
@@ -63,6 +65,11 @@ class CustomerController extends Controller
 
     function delete_company($id='')
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','delete-customer']))
+            return view('admin.error.403');
+
+      if( ! auth()->guard('admin')->user()->hasPermissions(['Admin','company-management']))
+        return redirect()->back();
        if(DB::table('companies')->where('id',$id)->delete()){
         return redirect()->back()->with('success','Deleted successfully');
         }
@@ -73,12 +80,18 @@ class CustomerController extends Controller
 
     function add_company(Request $request)
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','add-customer']))
+            return view('admin.error.403');
+
         DB::table('companies')->insert(['name'=>$request['company_name']]);
         return redirect()->back()->with('success','Added successfully');
     }
 
     function edit_company(Request $request)
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','edit-customer']))
+            return view('admin.error.403');
+
         DB::table('companies')->where('id',$request['company_id'])->update(['name'=>$request['company_name']]);
         return redirect()->back()->with('success','Updated successfully');
     }
@@ -87,6 +100,9 @@ class CustomerController extends Controller
 
     public function customer()
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','customer-management']))
+            return view('admin.error.403');
+
         $customers=DB::table('customers')
         ->select('customers.*','companies.name')
         ->join('companies','companies.id','=','customers.company_id')
@@ -131,18 +147,11 @@ class CustomerController extends Controller
 
     }
 
-    function delete_customer($id='')
-    {
-       if(DB::table('customers')->where('id',$id)->delete()){
-            return redirect()->back()->with('success','Deleted successfully');
-        }
-        else{
-            return redirect()->back()->with('Error','Sorry,did not  delete');
-        }
-    }
-
     function add_customer(Request $request)
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','add-customer']))
+            return view('admin.error.403');
+
         if (DB::table('customers')
             ->where('email', $request['email'])
             ->first() || DB::table('customers')
@@ -216,12 +225,97 @@ class CustomerController extends Controller
 
     }
 
-    function edit_customer(Request $request)
+    public function edit_customer($id='')
     {
-        DB::table('customers')->where('id',$request['customer_id'])->update(['name'=>$request['customer_name']]);
-        return redirect()->back()->with('success','Updated successfully');
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','edit-customer']))
+            return view('admin.error.403');
+
+        $customer_find = CustomerModel::find($id);
+        return view('admin.customer.edit_customer', ['customer_find' => $customer_find]);
     }
 
+    public function update_customer(Request $request)
+    {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','edit-customer']))
+            return view('admin.error.403');
+
+        $update_customer = CustomerModel::find($request['id']);
+        $update_customer->customer_name = $request['name'];
+        $update_customer->company_id = $request['company'];
+        $update_customer->customer_address = $request['address'];
+        $update_customer->customer_phone = $request['phone'];
+        $update_customer->customer_gender = $request['gender'];
+        $update_customer->customer_uniqe_id = $request['uid'];
+        $update_customer->sec_email = $request['semail'];
+        $update_customer->secondry_phone = $request['sphone'];
+        $update_customer->note = $request['note'];
+        $update_customer->customer_since_date = $request['sdate'];
+        $update_customer->status = $request['status'];
+        $update_customer->prefered = $request['pref'];
+        $update_customer->email = $request['email'];
+        $update_customer->comp_city = $request['city'];
+        $update_customer->zip_code = $request['zip'];
+        $update_customer->country = $request['country'];
+        $update_customer->consignee = $request['cons'];
+        $update_customer->cons_street = $request['cons_street'];
+        $update_customer->cons_box = $request['cons_box'];
+        $update_customer->cons_city = $request['cons_city'];
+        $update_customer->cons_zip_code = $request['cons_zip'];
+        $update_customer->cons_country = $request['cons_country'];
+        $update_customer->cons_phone = $request['cons_phone'];
+        $update_customer->cons_email = $request['cons_email'];
+        $update_customer->cons_fax = $request['cons_fax'];
+        $update_customer->cons_poc = $request['cons_poc'];
+        $update_customer->notify_party = $request['notify_party'];
+        $update_customer->notify_street = $request['notify_street'];
+        $update_customer->notify_box = $request['notify_box'];
+        $update_customer->notify_city = $request['notify_city'];
+        $update_customer->notify_state = $request['notify_state'];
+        $update_customer->notify_zip = $request['notify_zip'];
+        $update_customer->notify_country = $request['notify_country'];
+        $update_customer->notify_phone = $request['notify_phone'];
+        $update_customer->notify_email = $request['notify_email'];
+        $update_customer->notify_fax = $request['notify_fax'];
+        $update_customer->notify_poc = $request['notify_poc'];
+        if ($request['password']) {
+            $update_customer->password = bcrypt($request['password']);
+        } else {
+            $update_customer->password = $request['old_password'];
+        }
+        $update_customer->about = $request['description'];
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $imagename = time() . '.' . $photo->getClientOriginalExtension();
+            $destinationPath = public_path('images/customer');
+            $thumb_img = Image::make($photo->getRealPath())->resize(267, 286);
+            $thumb_img->save($destinationPath . '/' . $imagename, 80);
+            $photo->move($destinationPath, $imagename);
+            $data['photo'] = $imagename;
+        }
+        if ($request->hasFile('photo')) {
+            $update_customer->photo = $imagename;
+        } else {
+            $update_customer->photo = $request['pname'];
+        }
+        $oldPhoto = $update_customer->photo;
+        if ($oldPhoto !== $update_customer->photo) {
+            $this->removecustomersphoto($oldPhoto);
+        }
+        $update_customer->update();
+        // flog('Customer','Update Customer ',$request['name']);
+        return redirect()->route('customer_admin')->with('success', 'Successfully Updated!');
+
+    }
+
+    private function removecustomersphoto($photo)
+    {
+        if (!empty($photo)) {
+            $file_path = public_path('/images/customer') . '/' . $photo;
+
+            if (file_exists($file_path)) unlink($file_path);
+        }
+    }
+    // find a customer 
     public function singel_customer(Request $request)
     {
       $customers=DB::table('customers')->select('id','customer_name')->where('company_id',$request['company_id'])->first();
@@ -229,6 +323,20 @@ class CustomerController extends Controller
         $data="<option value='$customers->id'>".$customers->customer_name.="</option>";
        echo ($data);
     }
+
+    function delete_customer($id='')
+    {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','delete-customer']))
+            return view('admin.error.403');
+
+       if(DB::table('customers')->where('id',$id)->delete()){
+            return redirect()->back()->with('success','Deleted successfully');
+        }
+        else{
+            return redirect()->back()->with('Error','Sorry,did not  delete');
+        }
+    }
+
 
     
 

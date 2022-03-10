@@ -57,7 +57,7 @@ class InvoiceControllerCustomer extends Controller
                 $invoice->where('pgl_invoices.status',$status);
              } 
             if($searchQuery!=''){
-                 $pagination=20000;
+                 $pagination=100;
                  $invoice->where(function($q) use($requestData, $searchQuery) {
                     foreach ($requestData as $field)
                     $q->orWhere($field, 'like', "%{$searchQuery}%");

@@ -28,13 +28,14 @@
 @section('js')
 <script type="text/javascript">
     $(document).ready(function(){
-        // $(".vehicles").addClass('active');
-        // print section
          $('#print').click(function(){
-            $(this).addClass('hide');
-            $('no-print').addClass('hide');
+            $('.no-print').css('visibility','hidden');
             $(".love").css("margin-top","-50px");
             window.print(); 
+            setTimeout(function(){
+                $(".love").css("margin-top","0px");
+                $('.no-print').css('visibility','visible');
+            },50);
         });
     })
 </script>
@@ -47,7 +48,7 @@
         <div class="row love">
             <br class="no-print">
             <div class="col-md-6 col-md-offset-2 no-print">
-                &nbsp;&nbsp; <button type="button" class="btn btn-info no-print" id="print"><i class="fa fa-print"></i>&nbsp;Print</button>
+                &nbsp;&nbsp; <button type="button" class="btn btn-info no-print btn-rounded" id="print"><i class="fa fa-print"></i>&nbsp;Print</button>
             </div>
             <br class="no-print">
             <br class="no-print">
@@ -67,7 +68,6 @@
                             </td>
                             <td id="td1">BOOKING NUMEBR <br>{{ isset($conti)?$conti->booking_number:'' }}</td>
                             <td id="td1">BILL OF LADDING NO. <br>{{isset($conti)?$conti->bolading_number : ''}}</td>
-
                         </tr>
                         <tr>
 
@@ -90,7 +90,7 @@
                         <tr>
                             <td id="td1" rowspan="5">CONSIGNEE<br>
                             <?php $data1=DB::table('tbl_bases')->join('vehicles','tbl_bases.vehicle_id','vehicles.id')->where('tbl_bases.container_id',isset($conti)?$conti->id : '')->first();
-                                      $data=DB::table('customers')->where('id',$data1->customer_id)->first();  
+                                      $data=DB::table('customers')->where('id',@$data1->customer_id)->first();  
 
                             ?>
                                 

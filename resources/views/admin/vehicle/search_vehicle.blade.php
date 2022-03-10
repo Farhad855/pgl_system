@@ -6,7 +6,10 @@
 	<div class="container-fluid"> 
 		<div class=" bg-white table-responsive">
 			<div class="form-group col-md-3 col-lg-3 col-sm-6 col-xs-12" style="margin:1%">
-			 <input type="text" name="search" class="form-control b-a" placeholder="Search for ..." id="search">
+			 <div class="input-group">
+    			<span class="input-group-addon"><i class="ti ti-reload text text-warning search_reload"></i></span>
+    			<input type="text" name="search" class="form-control b-a" placeholder="Search for ..." id="search">
+  			</div>
 		   </div>
 		   <div class="form-group col-md-1 col-lg-1 col-sm-2 col-xs-12" style="margin:1%;float: right;">
 		   		<select class="form-control" id="showEntry">
@@ -68,6 +71,11 @@
 	   		e.preventDefault();
 	   		var page = $(this).attr('href').split('page=')[1];
 	   		getMoreVehicle(page);
+	   		});
+
+	   	$('.search_reload').click(function(){
+	   		getMoreVehicle(1);
+	   	});
 
 	   	 function getMoreVehicle(page){
 	      	  $('#searchBody').html("<div style='position:fixed; margin-top:7%; margin-left:40%;'><img width='70px' src= '"+"{{asset('img/loading.gif')}}"+"' alt='Loading ...'> </div> ");
@@ -84,7 +92,6 @@
 	            	$('#user_data').html(textStatus);
 	            });
 	          }
-        });
 
        // search section 
        $('#search').on('keyup',function(e){

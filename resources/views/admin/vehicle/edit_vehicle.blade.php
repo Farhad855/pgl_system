@@ -200,8 +200,8 @@
 
                                         </div>
                                         <div class="form-group">
-                                            <label for="chose file">Auction Invoice</label>
-                                            <input type="file" name="file" class="form-control" value="{{@$vehicle->file}}" />
+                                            <label for="chose file">Auction Invoice (link)</label>
+                                            <input type="link" name="auction_invoice" class="form-control" value="{{@$vehicle->file}}" placeholder="link for auction invoice" />
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -209,6 +209,9 @@
                                             <label for="">Enter Note :</label>
                                             <textarea name="note" id="" cols="30" rows="10" class="textarea wysihtml5-editor placeholder form-control">{{@$vehicle->note}}</textarea>
                                         </div>
+                                    </div><br>
+                                    <div class="col-md-12">
+                                       <button type="submit" class="btn btn-info btn-rounded">Edit</button>
                                     </div>
                                     <!-- /.col -->
                                 </div>            
@@ -314,6 +317,9 @@
                                         <div class="form-group">
                                             <label for="towed">Towed From</label>
                                             <input type="text" value="{{@$vehicle->auction_city}}" name="towedf" placeholder="enter Towed From" class="form-control" id="towed" />
+                                        </div><br>
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-info btn-rounded">Edit</button>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -409,6 +415,10 @@
                                                         <label for="gns" style="background-color: #00A6C7; color: white">GPS Navigation System :&nbsp;</label>
                                                         <input type="checkbox" {{$vehicle->gps =='Yes' ? 'checked' :''}}   class="iradio_flat-green flat-red" name="gns" value="Yes" />
                                                     </div>
+                                                    <br>
+                                                    <div class="col-md-12">
+                                                        <button type="submit" class="btn btn-info btn-rounded">Edit</button>
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-6" style="padding-left: 200px">
 
@@ -497,6 +507,9 @@
                                                 <option value="0" <?php if($vehicle->is_key==0){echo "selected";}?>>No</option>
                                                 <option value="1" <?php if($vehicle->is_key==1){echo "selected";}?>>Yes</option>
                                             </select>
+                                        </div><br>
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-info btn-rounded">Edit</button>
                                         </div>
                                     </div>
                                     <div class="col-md-6">

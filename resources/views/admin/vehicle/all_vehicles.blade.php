@@ -7,12 +7,15 @@
 	<div class="container-fluid"> 
 		<div class=" bg-white table-responsive">
 			<div class="form-group col-md-3 col-lg-3 col-sm-6 col-xs-12" style="margin:1%">
-			 <input type="text" name="search" class="form-control b-a" placeholder="Search for ..." id="search">
+			 <div class="input-group">
+    			<span class="input-group-addon"><i class="ti ti-reload text text-warning search_reload"></i></span>
+    			<input type="text" name="search" class="form-control b-a" placeholder="Search for ..." id="search">
+  			</div>
 		   </div>
 		   <div class="form-group col-md-2 col-lg-2 col-sm-3 col-xs-6" style="margin:1%">
-			<button type="button" class="excel btn btn-outline-warning mb-0-25 waves-effect waves-light">
-				<i class="fa fa-file-excel-o"></i>
-			</button>
+				<button type="button" class="excel btn btn-outline-warning mb-0-25 waves-effect waves-light">
+					<i class="fa fa-file-excel-o"></i>
+				</button>
 		   </div>
 		   <div class="form-group col-md-2 col-lg-2 col-sm-3 col-xs-6" style="margin:1%">
 			 <!-- <button class="btn btn-info pdf">PDF</button> -->
@@ -30,6 +33,9 @@
 		   		</select>
 		   </div>
 		   <div>
+		   	<div class="col-md-2 col-lg-2 col-sm-6 col-xs-12 text-right" style="margin-top:1.5%;float: right;text-align: right;">
+		   	<a href="#" class="text text-warning"><b>All Vehicles</b></a>
+		   </div>
 		   <!-- <a href="{{route('vehicle_excel_customer')}}" class="btn" style="margin:1%"><i class="fa fa-file-excel-o"> &nbsp;Excel</i></a> -->
 		 </div>
 		   <!-- <table class="table table-2" id="user_data"> -->
@@ -79,8 +85,11 @@
 	   		e.preventDefault();
 	   		var page = $(this).attr('href').split('page=')[1];
 	   		getMoreVehicle(page);
-
-	   	 function getMoreVehicle(page){
+        });
+	   	$('.search_reload').click(function(){
+	   		getMoreVehicle(1);
+	   	});
+	   	function getMoreVehicle(page){
 	      	  $('#searchBody').html("<div style='position:fixed; margin-top:7%; margin-left:40%;'><img width='70px' src='img/loading.gif' alt='Loading ...'> </div> ");
 		       var request = $.ajax({
 	              url: "{{route('paginate_all_vehicle_admin')}}" +'?page='+page,
@@ -95,11 +104,13 @@
 	            	$('#user_data').html(textStatus);
 	            });
 	          }
-        });
 
        // search section 
        $('#search').on('keyup',function(e){
 	   		var searchData = $(this).val();
+	   		if(searchData.length <=3){
+	   			return false ;
+	   		}
 	   		 searchVehicle(searchData);
 	   	 function searchVehicle(searchData){
 	      	   $('#searchBody').html("<div style='position:fixed; margin-top:7%; margin-left:40%;'><img width='70px' src='img/loading.gif' alt='Loading ...'> </div> ");
@@ -168,13 +179,14 @@
           	$('#user_data').append(textStatus);
         });
        });
+       // show toast
        function toast(){
        	$.toast({
 			  text :"Success",
 			  position:'top-right',
 			  bgColor:'#43b968',
 
-			});	
+			  });	
        }
       
 	});

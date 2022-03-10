@@ -1,12 +1,16 @@
-			<table class="table table-bordered">
+			<table class="table table-bordered" id="example">
 				<thead class="bg-info dataTable" id="table-2">
 					<tr>
 						<th>#</th>
 						@if($status=='')
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-invoice']))
 						<th>Edit</th>
 						@endif
+						@endif
 						@if($status !='' and $status !='4')
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-status']))
 						<th> <input type="checkbox" id="check_all"> &nbsp;Select</th>
+						@endif
 						@endif
 						@if($status=='4')
 						<th>Approve</th>
@@ -26,7 +30,9 @@
                         @endif
                         <th>PDF</th>
                         @if($status=='')
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-invoice']))
                         <th>Delete</th>
+                        @endif
                         @endif
 					</tr>
 				</thead>
@@ -40,13 +46,18 @@
 					<tr id="searchBody">
 						<td><?=$id++; ?></td>
 						@if($status=='')
+						 @if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-invoice']))
 						<td>
                         	<a href="{{route('edit_invoice_admin',$invoice->id)}}" class="btn btn-info btn-circle waves-effect waves-light"><span class="fa fa-pencil"></span>
                         	</a>
                         </td>
                         @endif
+                        @endif
                        @if($status !='' and $status !='4')
-						<td> <input type="checkbox" class="checkbox" data-id={{$invoice->id}}"> </td>
+                       @if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-status']))
+						<td> <input type="checkbox" class="checkbox" data-id={{$invoice->id}}"> 
+						</td>
+						@endif
 						@endif
                         @if($status=='4')
                         <td>
@@ -75,42 +86,50 @@
 	                   <td><a href="{{route('invoice_pdf_admin',$invoice->id)}}" target="_blank">PDF</a>
 	                   </td>
 	                   @if($status=='')
+	                    @if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-invoice']))
 	                   <td>
 	                   <a  class="btn btn-warning btn-circle" onclick="javascript:return confirm('Are you sure you want to delete ?')" href="{{route('delete_invoice_admin',$invoice->id)}}"><span class="fa fa-trash"></span>
 	                   	</a>
 	                   </td>
+	                   @endif
 	                   @endif
 					</tr>
 					@endforeach
 				</tbody>
 				<tfoot>
 					<tr>
-						<th></th>
+						<th>#</th>
 						@if($status=='')
-						<th></th>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-invoice']))
+						<th>Edit</th>
+						@endif
 						@endif
 						@if($status !='' and $status !='4')
-						<th></th>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-status']))
+						<th> <input type="checkbox" id="check_all"> &nbsp;Select</th>
+						@endif
 						@endif
 						@if($status=='4')
-						<th></th>
+						<th>Approve</th>
 						@endif
-						<th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>${{$invoice_amount}}</th>
-                        <th>${{$payment_received}}</th>
-                        <th></th>
+						<th>Invoice Number</th>
+						<th>Company</th>
+                        <th>Purpose</th>
+                        <th>Container Number</th>
+                        <th>Issue Date</th>
+                        <th>Due Date</th>
+                        <th>Invoice Amount</th>
+                        <th>Payment Received</th>
+                        <th>Received Date</th>
                         @if($status !=3)
-                        <th>${{$invoice_amount-$payment_received}}</th>
-                        <th></th>
+                        <th>Balance Due</th>
+                        <th>Past Due Days</th>
                         @endif
-                        <th></th>
+                        <th>PDF</th>
                         @if($status=='')
-                        <th></th>
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-invoice']))
+                        <th>Delete</th>
+                        @endif
                         @endif
 					</tr>
 				</tfoot>

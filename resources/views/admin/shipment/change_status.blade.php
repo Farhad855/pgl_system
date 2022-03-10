@@ -1,4 +1,4 @@
-<!-- Edit company modal -->
+<!-- change shipment status modal -->
 <div class="modal fade small-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="change_status">
 	<div class="modal-dialog modal-md">
 			<div class="modal-content">

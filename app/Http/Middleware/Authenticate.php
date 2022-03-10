@@ -20,7 +20,7 @@ class Authenticate extends Middleware
                return url('admin_login');
              }
           else{
-             return url('customer_login');
+             return url('/');
           }
 
         }

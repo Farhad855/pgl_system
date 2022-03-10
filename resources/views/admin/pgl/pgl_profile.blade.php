@@ -53,7 +53,9 @@
                             <div class="media-body">
                                 <h6 class="media-heading mt-0-5"><a class="text-white mr-1" href="#">PGL</a></h6>
                                 <div class="font-90 mb-0-5"> Peace Global Logistics</div>
+                                @if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-company']))
                                 <a href="#update" data-toggle="modal" class="btn btn-outline-white btn-rounded">Update</a>
+                                @endif
                             </div>
                         </div>
                     </div>

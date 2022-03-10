@@ -22,9 +22,9 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="name">Invoice Number</label>
-                            <input type="text" name="inv_number" id="name" class="form-control" placeholder="Invoice Number" />
+                            <input type="text" name="inv_number" id="invoice_no" class="form-control" placeholder="Invoice Number" />
+                            <span id="invoice_exist" style="color: red;font-weight: bold;"></span>
                         </div>
-
                         <div class="form-group">
                             <label for="name">Invoice Date</label>
                             <input type="date" name="inv_date"  class="form-control" placeholder="Invoice Date" />
@@ -100,6 +100,28 @@
     </form>
 	</div>
   </div>
-</div>
-		
+</div>		
+@stop
+@section('js')
+<script>
+    $(document).ready(function(){
+        $('#invoice_no').focusout(function(){
+            $('#invoice_exist').html("<div style='color:blue !important'><img width='30px' src= '"+"{{asset('img/loading.gif')}}"+"' alt='Loading ...'> </div> ");
+            var invoice_no=$(this).val();
+           var request = $.ajax({
+              url: "{{route('check_invoice_number')}}",
+              method: "GET",
+              data: {invoice_no:invoice_no},
+            }); 
+            request.done(function( msg ) {
+                if(msg)
+                $('#invoice_exist').text('This invoie number already exist ! ');
+                else  $('#invoice_exist').text('');
+            });
+            request.fail(function( jqXHR, textStatus ) {
+                alert(textStatus)
+          });
+       });
+    });
+</script>
 @stop

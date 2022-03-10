@@ -1,5 +1,5 @@
 
-			<table class="table table-bordered">
+			<table class="table table-bordered" id="example">
 				<thead class="bg-info">
 					<tr>
 						<th>#</th>
@@ -13,7 +13,9 @@
                         <th>Tow Amount Actual</th>
                         <th>Tow Amount Charged</th>
                         <th>Profit</th>
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-vehicle']))
 						<th>Edit</th>
+						@endif
 
 					</tr>
 				</thead>
@@ -39,11 +41,12 @@
                         <td><?php $profit=(int)$veh->tow_amounts-(int)$veh->tow_amount;
 							echo @$profit;@$total_profit+=@$profit;?>
 						</td>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-vehicle']))
 						<td>
                         	<a href="{{url('edit_vehicle',$veh->id)}}" class="btn btn-info btn-circle waves-effect waves-light"><span class="fa fa-pencil"></span>
                         	</a>
                         </td>
-                
+                		@endif
 					</tr>
 					@endforeach
 				</tbody>
@@ -60,7 +63,9 @@
 						<td><span class="red">{{$total_actual}}</span></td>
 						<td><span class="red">{{$total_charged}}</span></td>
 						<td><span class="red">{{$total_profit}}</span></td>
-						<td></td>	
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-vehicle']))
+						<td></td>
+						@endif	
 					</tr>
 				</tfoot>
 			</table>

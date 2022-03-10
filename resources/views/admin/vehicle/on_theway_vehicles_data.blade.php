@@ -1,10 +1,14 @@
 
-			<table class="table table-bordered">
+			<table class="table table-bordered" id="example">
 				<thead class="bg-info">
 					<tr>
 						<th>#</th>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-vehicle']))
 						<th>Edit</th>
+						@endif
+						 @if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-status']))
 						<th>Select</th>
+						@endif
 						<th>Vehicle Desc</th>
 						<th>Vin No</th>
 						<th>Lot No</th>
@@ -30,13 +34,17 @@
 					@foreach($vehicles as $veh)
 					<tr id="searchBody">
 						<td>{{$id++}}</td>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-vehicle']))
 						<td>
                         	<a href="{{url('edit_vehicle',$veh->id)}}" class="btn btn-info btn-circle waves-effect waves-light"><span class="fa fa-pencil"></span>
                         	</a>
                         </td>
+                        @endif
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-status']))
                         <td>
-                        	<input type="checkbox" name="">
+                        	<input type="checkbox" class="checkbox" data-id={{$veh->id}}"> 
                         </td>
+                        @endif
 						<td>{{$veh->year}}&nbsp;{{$veh->make}}&nbsp;{{$veh->model}}&nbsp;{{$veh->color}}</td>
 						<td><span class="tag tag-info">{{$veh->vin}}</span></td>
 						<td><span class="tag tag-warning">{{$veh->lot_number}}</span></td>
@@ -67,8 +75,12 @@
 				<tfoot>
 					<tr>
 						<th>#</th>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-vehicle']))
 						<th>Edit</th>
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-status']))
 						<th>Select</th>
+						@endif
 						<th>Vehicle Desc</th>
 						<th>Vin No</th>
 						<th>Lot No</th>

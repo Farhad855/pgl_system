@@ -25,12 +25,12 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
+    'pretty_version' => 'dev-master',
+    'version' => 'dev-master',
     'aliases' => 
     array (
     ),
-    'reference' => NULL,
+    'reference' => 'ec3ae98230c3fe5b91825b4dc815319bae332321',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -469,12 +469,12 @@ private static $installed = array (
     ),
     'laravel/laravel' => 
     array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
       'aliases' => 
       array (
       ),
-      'reference' => NULL,
+      'reference' => 'ec3ae98230c3fe5b91825b4dc815319bae332321',
     ),
     'laravel/tinker' => 
     array (
@@ -870,8 +870,8 @@ private static $installed = array (
     array (
       'provided' => 
       array (
-        0 => '1.0|2.0',
-        1 => '1.0.0 || 2.0.0 || 3.0.0',
+        0 => '1.0.0 || 2.0.0 || 3.0.0',
+        1 => '1.0|2.0',
       ),
     ),
     'psr/simple-cache' => 
@@ -1051,6 +1051,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '99732be0ddb3361e16ad77b68ba41efc8e979019',
+    ),
+    'spatie/laravel-permission' => 
+    array (
+      'pretty_version' => '5.3.2',
+      'version' => '5.3.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '10d4c14dd66f82ce777ab76f5708bd14ff5a1ef8',
     ),
     'swiftmailer/swiftmailer' => 
     array (

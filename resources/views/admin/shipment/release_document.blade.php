@@ -1,22 +1,19 @@
 @extends('admin.layout.main')
 @section('title','Release Document')
 @section('js')
-    <script>
-        $(document).ready(function () {
-            $("#shipment").addClass("active");
-            $("#dash").removeClass("active");
-        });
-        $(document).ready(function(){
-        // $(".vehicles").addClass('active');
-        // print section
-         $('#print').click(function(){
-            $(this).addClass('hide');
-            $('.no-print').addClass('hide');
-            $(".love").css("margin-top","-50px");
-            window.print(); 
-        });
+<script>
+    $(document).ready(function(){
+     $('#print').click(function(){
+         $('.no-print').css('visibility','hidden');
+        $(".love").css("margin-top","-120px");
+        window.print();
+        setTimeout(function(){
+            $(".love").css("margin-top","0px");
+            $('.no-print').css('visibility','visible');
+        },50); 
     });
-    </script>
+  });
+</script>
 @stop
 <style>
     table {

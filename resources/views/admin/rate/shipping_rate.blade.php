@@ -8,8 +8,15 @@
 			<div class="form-group col-md-3 col-lg-3 col-sm-6 col-xs-12" style="margin:1%">
 			 <input type="text" name="search" class="form-control b-a" placeholder="Search for ..." id="search">
 		   </div>
+		   @if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-ship-rate']))
 		   <div class="form-group col-md-1 col-lg-1 col-sm-6 col-xs-12" style="margin:1%">
 				<button type="button" class="btn btn-warning btn-rounded mb-0-25 waves-effect waves-light" data-toggle="modal" data-target="#add_shipping_rate"><b><i class="ti-plus"></i></b> Add
+				</button>
+		   </div>
+		   @endif
+		    <div class="form-group col-md-2 col-lg-2 col-sm-3 col-xs-6" style="margin:1%">
+				<button type="button" class="excel btn btn-outline-warning mb-0-25 waves-effect waves-light">
+					<i class="fa fa-file-excel-o"></i>
 				</button>
 		   </div>
 		   <div class="form-group col-md-1 col-lg-1 col-sm-2 col-xs-12" style="margin:1%;float: right;">
@@ -23,6 +30,9 @@
 		   			<option value="500">500</option>
 		   			<option value="9000000">All</option>
 		   		</select>
+		   </div>
+		   <div class="col-md-2 col-lg-2 col-sm-6 col-xs-12 text-right" style="margin-top:1.5%;float: right;text-align: right;">
+		   	<a href="#" class="text text-warning"><b>Shipping Rate</b></a>
 		   </div>
 	<div class="site" id="user_data">
 		@include('admin.rate.shipping_rate_data')
@@ -91,43 +101,6 @@
 	            	$('#user_data').append(textStatus);
 	          });
        });
-
-       // make sorable table 
-       $('th').each(function (col) {
-            $(this).hover(
-                    function () {
-                        $(this).addClass('focus');
-                    },
-                    function () {
-                        $(this).removeClass('focus');
-                    }
-            );
-            $(this).click(function () {
-                if ($(this).is('.asc')) {
-                    $(this).removeClass('asc');
-                    $(this).addClass('desc selected');
-                    sortOrder = -1;
-                } else {
-                    $(this).addClass('asc selected');
-                    $(this).removeClass('desc');
-                    sortOrder = 1;
-                }
-                $(this).siblings().removeClass('asc selected');
-                $(this).siblings().removeClass('desc selected');
-                var arrData = $('table').find('tbody >tr:has(td)').get();
-                arrData.sort(function (a, b) {
-                    var val1 = $(a).children('td').eq(col).text().toUpperCase();
-                    var val2 = $(b).children('td').eq(col).text().toUpperCase();
-                    if ($.isNumeric(val1) && $.isNumeric(val2))
-                        return sortOrder == 1 ? val1 - val2 : val2 - val1;
-                    else
-                        return (val1 < val2) ? -sortOrder : (val1 > val2) ? sortOrder : 0;
-                });
-                $.each(arrData, function (index, row) {
-                    $('tbody').append(row);
-                });
-            });
-        });
 
 	});
 </script>

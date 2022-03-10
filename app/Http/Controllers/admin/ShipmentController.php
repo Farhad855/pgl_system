@@ -20,6 +20,9 @@ class ShipmentController extends Controller
 
     public function shipment($status='',$locations='')
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','shipment-management']))
+            return view('admin.error.403');
+
         $sta=$status;
         $location=$locations;
         if($status==10){
@@ -83,12 +86,12 @@ class ShipmentController extends Controller
             else $location = $request['locations'];
         }
         $searchQuery = trim($request['searchValue']);
-        $requestData = ['containers.booking_number','containers.container_number','containers.port_loading','companies.name'];
+        $requestData = ['containers.booking_number','containers.container_number','containers.port_loading','containers.vessel_name','companies.name'];
         if($request->ajax()){
         $shipment = DB::table('containers')->select("containers.*","containers.id as cid","companies.name as company_name")
            ->leftjoin('companies','companies.id','=','containers.company_id');
-           if(strlen($searchQuery) >= 2){
-             $pagination=20000;
+           if(strlen($searchQuery) >=3){
+             $pagination=100;
             $shipment->where(function($q) use($requestData, $searchQuery) {
                     foreach ($requestData as $field)
                      $q->orWhere($field, 'like', "%{$searchQuery}%");
@@ -160,6 +163,13 @@ class ShipmentController extends Controller
     // add shipment
     public function add_new_shipment(Request $request)
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','add-shipment']))
+            return view('admin.error.403');
+
+        $container_no=DB::table('containers')->where('container_number',$request['cont_number'])->exists();
+        if($container_no){
+            return redirect()->back()->with('error','container number already exist');
+        }
         $add_contanier = new ShipmentModel();
         $add_contanier->booking_number = $request['book_number'];
         $add_contanier->aes_itn_number = $request['itn_number'];
@@ -264,6 +274,9 @@ class ShipmentController extends Controller
 
     public function edit_shipment($id='')
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','edit-shipment']))
+            return view('admin.error.403');
+
         $container = ShipmentModel::find($id);
         return view('admin.shipment.edit_shipment',['container'=>$container]);
     }
@@ -362,6 +375,9 @@ class ShipmentController extends Controller
 
     public function delete_shipment($id='')
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','delete-shipment']))
+            return view('admin.error.403');
+
         $delete_shipment = ShipmentModel::find($id);
         // flog('Container','Delete container ',$delete_shipment->booking_number);
         $delete_shipment->delete();
@@ -405,6 +421,9 @@ class ShipmentController extends Controller
     // change shipment status 
     public function change_status_shipment(Request $request)
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','add-status']))
+            return view('admin.error.403');
+
         $ids = $request->ids;
          DB::table('containers')->whereIn('id',explode(",",$ids))
          ->update(['status' =>$request->status]);
@@ -443,8 +462,7 @@ class ShipmentController extends Controller
     }
 
     public function shipment_summary_search($company_id='', $status='')
-    {
-       
+    {  
         $shipment = DB::table('containers')
            ->select("containers.*","containers.id as cid","companies.name as company_name")
            ->leftJoin('companies','companies.id','=','containers.company_id');
@@ -455,5 +473,48 @@ class ShipmentController extends Controller
            $shipments=$shipment->paginate(100);
            return view('admin.shipment.shipment_summary_search',['shipments'=>$shipments,'status'=>10,'company_id'=>$company_id]); 
     }
+
+    // check container existens base on container no  
+   public function check_container_number(Request $request)
+    {
+      $container_no=DB::table('containers')->where('container_number',$request['container_number'])->exists();
+        if($container_no) echo true;
+        else echo false;
+    }
+
+    // update the etd containers date
+    function update_etd_date(Request $request)
+    {
+       $container_id=$request['container_id'];
+       $etd_date=$request['etd_date'];
+
+       $container=ShipmentModel::find($container_id);
+       $container->etd_port_loading=$etd_date;
+       if($container->update()){
+        echo json_encode($etd_date);
+       }
+       else{
+        echo json_encode(0);
+       }
+
+    }
+
+     // update the eta containers date
+    function update_eta_date(Request $request)
+    {
+       $container_id=$request['container_id'];
+       $eta_date=$request['eta_date'];
+
+       $container=ShipmentModel::find($container_id);
+       $container->eta_port_discharge=$eta_date;
+       if($container->update()){
+        echo json_encode($eta_date);
+       }
+       else{
+        echo json_encode(0);
+       }
+
+    }
+
 
 }

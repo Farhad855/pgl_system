@@ -212,8 +212,8 @@
 
                                         </div>
                                         <div class="form-group">
-                                            <label for="chose file">Auction Invoice</label>
-                                            <input type="file" name="file" class="form-control" />
+                                            <label for="chose file">Auction Invoice (link)</label>
+                                            <input type="link" name="auction_invoice" class="form-control" placeholder="link for auction invoice"/>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -737,6 +737,7 @@
     <script>
         $(document).ready(function(){
             $('#vin').focusout(function(){
+                $('#vin_exist').html("<div style='color:blue !important'><img width='30px' src= '"+"{{asset('img/loading.gif')}}"+"' alt='Loading ...'> </div> ");
                 var vin=$(this).val();
                var request = $.ajax({
                   url: "{{route('single_vehicle_vin')}}",

@@ -48,6 +48,9 @@ class PglController extends Controller
      */
     public function pgl_profile(PglModel $pglModel)
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','company-management']))
+            return view('admin.error.403');
+
         $pgl_profile=$pglModel->take(1)->first();
         return view('admin.pgl.pgl_profile')->with('comp_profile',$pgl_profile);
     }
@@ -72,6 +75,9 @@ class PglController extends Controller
      */
     public function update_pgl_profile(Request $request, PglModel $pglModel)
     {
+         if(!auth()->guard('admin')->user()->hasPermissions(['Admin','edit-company']))
+            return view('admin.error.403');
+
         $update_profile_com = $pglModel->find($request['id']);
         $update_profile_com->name = $request['name'];
         $update_profile_com->street = $request['street'];

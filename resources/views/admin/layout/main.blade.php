@@ -34,21 +34,12 @@
 		<link rel="stylesheet" href="{{asset('assets/DataTables/Buttons/css/bu ttons.bootstrap4.min.css')}}"> -->
 		<!-- Neptune CSS -->
 		<link rel="stylesheet" href="{{asset('assets/css/core.css')}}">
-		<!-- <style type="text/css">
-			div.dataTables_filter label{
-				display: none !important;
+		<style type="text/css">
+			.search_reload:hover{
+				cursor: pointer;
+				font-weight: bold;
 			}
-			div.dataTables_wrapper div.dt-buttons{
-		    margin-top: 12px;
-		    float: right !important;
-			  }
-			 table.dataTable thead th.sorting:after {
-			    display: none;
-			 }
-			 div.dataTables_info,div.dataTables_paginate{
-			 	display: none !important;
-			 }
-		</style> -->
+		</style>
 		 @yield('style')
 	</head>
 	<body class="fixed-sidebar fixed-header skin-default content-appear">
@@ -67,18 +58,24 @@
 								<span class="s-text">Dashboard</span>
 							</a>
 						</li>
+				
+						 @if(Auth::guard('admin')->user()->hasPermissions(['Admin','customer-management']))
 						<li>
 							<a href="{{route('company_admin')}}" class="waves-effect  waves-light">
 								<span class="s-icon"><i class="ti-layout-tab"></i></span>
-								<span class="s-text">Company managment</span>
+								<span class="s-text">Company </span>
 							</a>
 						</li>
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','customer-management']))
 						<li>
 							<a href="{{route('customer_admin')}}" class="waves-effect  waves-light">
 								<span class="s-icon"><i class="fa fa-users"></i></span>
-								<span class="s-text">Customer managment</span>
+								<span class="s-text">Customer </span>
 							</a>
 						</li>
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','vehicles-management']))
 						<li class="with-sub">
 							<a href="#" class="waves-effect  waves-light vehicles">
 								<span class="s-caret"><i class="fa fa-angle-down"></i></span>
@@ -87,9 +84,11 @@
 								<span class="s-text">Vehicles</span>
 							</a>
 							<ul>
+								@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-vehicles']))
 								<li>
 									<a href="{{url('add_vehicle')}}">Add new</a>
 								</li>
+								@endif
 								<li>
 									<a href="{{route('tow_cost_report_admin')}}" class="waves-effect  waves-light">
 										<span class="s-text">Tow Cost Report</span>
@@ -118,6 +117,8 @@
 								</li>
 							</ul>
 						</li>
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','shipment-management']))
 						<li class="with-sub">
 							<a href="#" class="waves-effect  waves-light">
 								<span class="s-caret"><i class="fa fa-angle-down"></i></span>
@@ -126,9 +127,11 @@
 								<span class="s-text">Shipments</span>
 							</a>
 							<ul>
+								@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-shipment']))
 								<li>
 									<a href="{{url('add_shipment')}}">Add new</a>
 								</li>
+								@endif
 								<li><a href="{{route('shipment_admin',['10','10'])}}">All <span class="tag tag-warning t_all_ship" style="float:right;">0</span></a></li>
 								<li><a href="{{route('shipment_admin',['3','10'])}}">Pending <span class="tag tag-warning t_pending_ship" style="float:right;">0</span></a></li>
 								<li class="with-sub">
@@ -188,6 +191,8 @@
 								</li>
 							</ul>
 						</li>
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','invoices-management']))
 						<li class="with-sub">
 							<a href="#" class="waves-effect  waves-light">
 								<span class="s-caret"><i class="fa fa-angle-down"></i></span>
@@ -196,9 +201,11 @@
 								<span class="s-text">Invoices</span>
 							</a>
 							<ul>
+								@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-invoice']))
 								<li>
 									<a href="{{route('add_invoice_admin')}}">Add new</a>
 								</li>
+								@endif
 								<li><a href="{{route('invoice_admin','5')}}">All
 								<span class="tag tag-warning t_all_inv" style="float:right;">0</span>
 								</a></li>
@@ -216,6 +223,8 @@
 								</a></li>
 							</ul>
 						</li>
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','rates-management']))
 						<li class="with-sub">
 							<a href="#" class="waves-effect  waves-light">
 								<span class="s-caret"><i class="fa fa-angle-down"></i></span>
@@ -227,6 +236,8 @@
 								<li><a href="{{route('towing_rate_admin')}}">Towing Rates</a></li>
 							</ul>
 						</li>
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','setting']))
 						<li class="with-sub">
 							<a href="#" class="waves-effect  waves-light">
 								<span class="s-caret"><i class="fa fa-angle-down"></i></span>
@@ -238,6 +249,8 @@
 								<li><a href="{{route('status_admin')}}">Status</a></li>
 							</ul>
 						</li>
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','report-center']))
 						<li class="with-sub">
 							<a href="#" class="waves-effect  waves-light">
 								<span class="s-caret"><i class="fa fa-angle-down"></i></span>
@@ -251,24 +264,23 @@
 								<li><a href="#">Invoice report</a></li>
 							</ul>
 						</li>
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','company-management']))
 						<li>
 							<a href="{{route('pgl_profile')}}" class="waves-effect  waves-light">
 								<span class="s-icon"><i class="ti-calendar"></i></span>
 								<span class="s-text">PGL Profile</span>
 							</a>
 						</li>
-						<!-- <li class="with-sub">
-							<a href="#" class="waves-effect  waves-light">
-								<span class="s-caret"><i class="fa fa-angle-down"></i></span>
-								<span class="s-icon"><i class="ti-star"></i></span>
-								<span class="s-text">Messages</span>
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','user-management']))
+						<li class="with-sub">
+							<a href="{{route('user_admin')}}" class="waves-effect  waves-light">
+								<span class="s-icon"><i class="fa fa-users"></i></span>
+								<span class="s-text">User</span>
 							</a>
-							<ul>
-								<li><a href="{{route('messages_customer')}}">Sended</a></li>
-								<li><a href="icons-ionicons.html">Received</a></li>
-								
-							</ul>
-						</li> -->
+						</li>
+						@endif
 					</ul>
 				</div>
 			</div>
@@ -331,8 +343,8 @@
 										<i class="ti-user mr-0-5"></i> Profile 
 									</a>
 									<a class="dropdown-item" href="{{route('admin_logout')}}"><i class="ti-power-off mr-0-5"></i> Sign out</a>
-									<a class="dropdown-item text-warning" target="_blank" href="http://pglsystem.com/customer_login">
-										<i class="ti-home mr-0-5"></i> Load old system
+									<a class="dropdown-item text-warning" target="_blank" href="http://pglsystem.com/login">
+										<i class="ti-home mr-0-5"></i> Load old Admin
 									</a>
 								</div>
 							</li>
@@ -449,7 +461,7 @@
 		</script>
 		<script>
 			$(document).ready(function(){
-				$('th').each(function (col) {
+				$('#example th').each(function (col) {
             $(this).hover(
                     function () {
                         $(this).addClass('focus');

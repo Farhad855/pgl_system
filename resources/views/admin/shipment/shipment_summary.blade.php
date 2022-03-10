@@ -25,6 +25,9 @@
                     @endforeach
 		   		</select>
 		   </div>
+           <div class="col-md-2 col-lg-2 col-sm-6 col-xs-12 text-right" style="margin-top:1.5%;float: right;text-align: right;">
+            <a href="#" class="text text-warning"><b>Shipment Summary</b></a>
+           </div>
 	<div class="site" id="user_data">
 		@include('admin.shipment.shipment_summary_data')
 	</div>

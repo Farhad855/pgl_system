@@ -34,7 +34,7 @@
 						<div class="t-content">
 							<h6 class="text-uppercase mb-1">Shipments</h6>
 							<h1 class="mb-1">{{@$containers}}</h1>
-							<i class="fa fa-caret-up text-success mr-0-5"></i><span> <a href="{{route('shipment_customer','5')}}">View All Shipments</a></span>
+							<i class="fa fa-caret-up text-success mr-0-5"></i><span> <a href="{{route('shipment_admin',[10,10])}}">View All Shipments</a></span>
 						</div>
 					</div>
 				</div>
@@ -44,7 +44,7 @@
 						<div class="t-content">
 							<h6 class="text-uppercase mb-1">Invoices</h6>
 							<h1 class="mb-1">{{@$invoices}}</h1>
-							<i class="fa fa-caret-up text-success mr-0-5"></i><span><a href="{{route('invoice_customer','5')}}">View All Invoices</a></span>
+							<i class="fa fa-caret-up text-success mr-0-5"></i><span><a href="{{route('invoice_admin','5')}}">View All Invoices</a></span>
 						</div>
 					</div>
 				</div>

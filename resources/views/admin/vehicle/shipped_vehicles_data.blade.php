@@ -1,4 +1,4 @@
-			<table class="table table-bordered">
+			<table class="table table-bordered" id="example">
 				<thead class="bg-info">
 					<tr>
 						<th>#</th>
@@ -72,9 +72,9 @@
                             <span class="label label-danger"></span>
                             @endif
                         </td>
-                       <td><a target="_blank" href="{{route('dock_recepit_customer',$veh->container_id)}}">Dock</a>
+                       <td><a target="_blank" href="{{route('dock_recepit_admin',$veh->container_id)}}">Dock</a>
                        </td>
-                        <td><a target="_blank" href="{{route('bol_customer',$veh->container_id)}}">BOL</a>
+                        <td><a target="_blank" href="{{route('bol_admin',$veh->container_id)}}">BOL</a>
                         </td>
 					</tr>
 					@endforeach

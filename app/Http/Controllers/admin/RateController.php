@@ -17,6 +17,9 @@ class RateController extends Controller
 
     public function view_towing_rate()
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','rates-management']))
+            return view('admin.error.403');
+
         $towingrates = RateModel::take(10000)->paginate(20);
         return view('admin.rate.towing_rate',['towingrates' => $towingrates,'paginate'=>20]);
     }
@@ -55,6 +58,9 @@ class RateController extends Controller
 
     public function add_update_towing_rate(Request $request)
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','add-tow-rate']))
+            return view('admin.error.403');
+
         if($request['id']){
         $towing_rate = RateModel::find($request['id']);
         }
@@ -121,6 +127,9 @@ class RateController extends Controller
 
     public function add_shipping_rate(Request $request)
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','add-ship-rate']))
+            return view('admin.error.403');
+
         $add_pgl_ship_rate = new Pgl_rates();
         $add_pgl_ship_rate->from_port = $request['from_port'];
         $add_pgl_ship_rate->to_port = $request['to_port'];

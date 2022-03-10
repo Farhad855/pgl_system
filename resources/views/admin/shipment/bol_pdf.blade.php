@@ -100,16 +100,20 @@
                                 CONSIGNEE  
                                 <br>
                                <?php $data1=DB::table('tbl_bases')->join('vehicles','tbl_bases.vehicle_id','vehicles.id')->where('tbl_bases.container_id',isset($conti)?$conti->id : '')->first();
-                                      $data=DB::table('customers')->where('id',$data1->customer_id)->first();  
+                                      $data=DB::table('customers')->where('id',@$data1->customer_id)->first();  
 
-                             echo $data->consignee;?> <br>
-                                <?php echo $data->cons_street; ?>
+                               echo $data->consignee;?> <br>
+                                <?=@$data->cons_street; ?>
                                 <br>
-                                P. O. Box Number: <?php echo $data->cons_box; ?>
+                                P. O. Box Number: <?=@$data->cons_box; ?>
                                 <br>
-                                <?php echo $data->cons_poc; ?>, <?php echo $data->cons_email; ?>  -  Phone: <?php echo $data->cons_phone; ?>
+                                <?=@$data->cons_poc; ?>, 
+                                <?=@$data->cons_email; ?>  - 
+                                 Phone: <?=@$data->cons_phone; ?>
                                 <br>
-                                <?php echo $data->cons_city; ?>, <?php echo $data->cons_zip_code; ?>, <?php echo $data->cons_country; ?>
+                                <?=@$data->cons_city; ?>, 
+                                <?=@$data->cons_zip_code; ?>,
+                                <?=@$data->cons_country; ?>
                             </th>
 
                         </tr>
@@ -149,15 +153,19 @@
                         <tr>
                             <th id="td1" rowspan="6">NOTIFY PARTY
                                 <br>
-                                <?php echo $data->notify_party ;?>
+                                <?=@$data->notify_party ;?>
                                 <br>
-                                <?php echo $data->notify_street ;?>
+                                <?=$data->notify_street ;?>
                                 <br>
-                                P. O. Box Number:  <?php echo $data->notify_box ;?>
+                                P. O. Box Number:  <?=@$data->notify_box ;?>
                                 <br>
-                                <?php echo $data->notify_city ;?>, <?php echo $data->notify_zip ;?>, <?php echo $data->notify_country ;?>
+                                <?=@$data->notify_city ;?>, 
+                                <?=@$data->notify_zip ;?>, 
+                                <?=@$data->notify_country ;?>
                                 <br>
-                                <?php echo $data->notify_poc ;?>, <?php echo $data->notify_email ;?> -  Phone: <?php echo $data->notify_phone ;?>
+                                <?=@$data->notify_poc ;?>, 
+                                <?=@$data->notify_email ;?> - 
+                                 Phone: <?=@$data->notify_phone ;?>
                             </th>
 
                             <td id="td1"> </td>

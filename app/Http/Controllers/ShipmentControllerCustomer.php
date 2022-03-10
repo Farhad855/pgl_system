@@ -82,7 +82,7 @@ class ShipmentControllerCustomer extends Controller
            ->leftJoin('tbl_bases','tbl_bases.container_id','=','containers.id')
            ->where('customer_id',Auth::id());
            if($searchQuery!=''){
-             $pagination=20000;
+             $pagination=100;
             $shipment->where(function($q) use($requestData, $searchQuery) {
                     foreach ($requestData as $field)
                      $q->orWhere($field, 'like', "%{$searchQuery}%");

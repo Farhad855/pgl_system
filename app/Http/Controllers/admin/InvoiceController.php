@@ -19,6 +19,9 @@ class InvoiceController extends Controller
     
     public function view_invoice($status='')
     {
+         if(!auth()->guard('admin')->user()->hasPermissions(['Admin','invoices-management']))
+            return view('admin.error.403');
+
         if($status==5){
             $status='';
         }
@@ -94,6 +97,9 @@ class InvoiceController extends Controller
 
     public function add_invoice(Request $request)
     {
+         if(!auth()->guard('admin')->user()->hasPermissions(['Admin','add-invoice']))
+            return view('admin.error.403');
+
         $company=DB::table('companies')->get();
         $container=DB::table('containers')->orderBy('id','DESC')->get();
         return view('admin.invoice.add_invoice',['companies'=>$company,'containers'=>$container]);
@@ -127,6 +133,9 @@ class InvoiceController extends Controller
 
     public function edit_invoice($id='')
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','edit-invoice']))
+            return view('admin.error.403');
+
         $invoice=InvoiceModel::find($id);
         $company=DB::table('companies')->get();
         $container=DB::table('containers')->orderBy('id','DESC')->get();
@@ -135,6 +144,9 @@ class InvoiceController extends Controller
 
     public function update_invoice(Request $request)
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','edit-invoice']))
+            return view('admin.error.403');
+
         $invoice_data =['invoice_no'=>$request['inv_number']];
         $update_invoice=InvoiceModel::find($request['id']);
 
@@ -208,29 +220,41 @@ class InvoiceController extends Controller
     {
         $pgl_invoice = DB::table('pgl_invoices')->find($id);
         $pdf = PDF::loadView('admin.invoice.invoice_pdf',['pgl_invoice'=>$pgl_invoice],['format' => ['A4',190,236]]);
-        return $pdf->download('invoice.pdf');
-
-      
+        return $pdf->download('invoice.pdf'); 
     }
 
     public function delete_invoice($id='')
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','delete-invoice']))
+            return view('admin.error.403');
+
         $delete_inovice=InvoiceModel::find($id);
         // flog('Invoice','Delete  Invoice ' ,$delete_pgl_inovice->inv_number);
         if($delete_inovice->delete()){
             return redirect()->back()->with('success','Successfully Deleted');
         }
         else{
-             return redirect()->back()->with('eroor','Not Deleted');
+             return redirect()->back()->with('error','Not Deleted');
         }
     }
 
     public function change_status_invoice(Request $request)
     {
+        if(!auth()->guard('admin')->user()->hasPermissions(['Admin','add-status']))
+            return view('admin.error.403');
+
         $ids = $request->ids;
          DB::table('pgl_invoices')->whereIn('id',explode(",",$ids))
          ->update(['status' =>$request->status]);
         return response()->json(['status'=>true,'message'=>'Status changed Successfully !']);
+    }
+
+    // find an invoice 
+   public function check_invoice_number(Request $request)
+    {
+      $invoice_no=DB::table('pgl_invoices')->where('inv_number',$request['invoice_no'])->exists();
+        if($invoice_no) echo true;
+        else echo false;
     }
 
 }

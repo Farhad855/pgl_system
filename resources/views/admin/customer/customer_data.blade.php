@@ -1,4 +1,4 @@
-			<table class="table table-bordered">
+			<table class="table table-bordered" id="example">
 				<thead class="bg-info dataTable" id="table-2">
 					<tr>
 						<th>#</th>
@@ -10,9 +10,15 @@
                         <th>Email Address</th>
                         <th>Physical Address</th>
                         <th>Status</th>
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','view-customer']))
                         <th>View Customer</th>
+                        @endif
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-customer']))
                         <th>Edit</th>
+                        @endif
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-customer']))
                         <th>Del</th>
+                        @endif
 					</tr>
 				</thead>
 				<tbody >
@@ -22,7 +28,7 @@
 						<td><?=$id++; ?></td>
                        <td>
                        	<span class="avatar box-32">
-                       	<img src="{{ asset('images/',$customer->photo) }}" onerror="this.src='{{asset('img/avatars/profile.png')}}'">
+                       	<img src="{{ asset('images/',$customer->photo) }}" onerror="this.src='{{asset('img/avatars/profile.png')}}'" style="height:40px">
                        	</span>
                        </td>
 	                    <td>{{@$customer->name}}</td>
@@ -40,46 +46,29 @@
 	                            <span class="tag tag-primary">Active</span>
 	                        @endif
 	                    </td>
+	                    @if(Auth::guard('admin')->user()->hasPermissions(['Admin','view-customer']))
 	                    <td>
-	                        <a href="{{url('view_customer',$customer->id)}}" class="btn btn-info btn-circle"><i class="fa fa-eye"></i></a>
+	                        <a href="#" class="btn btn-info btn-circle"><i class="fa fa-eye"></i></a>
 	                    </td>
+	                    @endif
+	                    @if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-customer']))
 	                   <td>
-		                   	<a href="#edit_customer{{$customer->id}}" class="btn btn-primary btn-circle" data-toggle="modal"><span class="fa fa-pencil"></span>
+		                   	<a href="{{route('edit_customer_admin',$customer->id)}}" class="btn btn-primary btn-circle"><span class="fa fa-pencil"></span>
 		                   	</a>
 		                </td>
+		                @endif
+		                @if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-customer']))
 		                <td>
-		                   	<a  class="btn btn-warning btn-circle" onclick="javascript:return confirm('Are you sure you want to delete ?')" href="{{route('delete_company_admin',$customer->id)}}"><span class="fa fa-trash"></span>
+		                   	<a  class="btn btn-warning btn-circle" onclick="javascript:return confirm('Are you sure you want to delete ?')" href="{{route('delete_customer_admin',$customer->id)}}"><span class="fa fa-trash"></span>
 		                   	</a>
 		                </td> 
+		                @endif
 					</tr>
-					<!-- add company modal -->
-					<div class="modal fade small-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="edit_customer{{$customer->id}}">
-						<div class="modal-dialog modal-md">
-							<form class="form" action="{{route('edit_customer_admin')}}" method="post">
-								@csrf
-								<div class="modal-content">
-									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">×</span>
-										</button>
-										<h4 class="modal-title">Add company</h4>
-									</div>
-									<div class="modal-body">
-										
-									</div>
-									<div class="modal-footer">
-										<button type="submit" class="btn btn-primary">Edit</button>
-										<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
 					@endforeach
 				</tbody>
 				<tfoot>
 					<tr>
-						<th style="width: 10px">#</th>
+						<th>#</th>
                         <th>Photo</th>
                         <th>Company</th>
                         <th>Customer ID</th>
@@ -88,9 +77,15 @@
                         <th>Email Address</th>
                         <th>Physical Address</th>
                         <th>Status</th>
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','view-customer']))
                         <th>View Customer</th>
+                        @endif
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-customer']))
                         <th>Edit</th>
+                        @endif
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-customer']))
                         <th>Del</th>
+                        @endif
 					</tr>
 				</tfoot>
 			</table>

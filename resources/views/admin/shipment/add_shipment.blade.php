@@ -39,7 +39,8 @@
                         </div>
                         <div class="form-group">
                             <label for="name"> Container Number</label>
-                            <input type="text" name="cont_number"  class="form-control" placeholder=" Container Number" />
+                            <input type="text" name="cont_number"  class="form-control" placeholder=" Container Number"  id="container_no" />
+                            <span id="container_exist" style="color: red;font-weight: bold;"></span>
                         </div>
                         <div class="form-group">
                             <label for="name"> Bill of Lading Number</label>
@@ -364,6 +365,28 @@
     </form>
 	</div>
   </div>
-</div>
-		
+</div>		
+@stop
+@section('js')
+<script>
+    $(document).ready(function(){
+        $('#container_no').focusout(function(){
+           $('#container_exist').html("<div style='color:blue !important'><img width='30px' src= '"+"{{asset('img/loading.gif')}}"+"' alt='Loading ...'> </div> ");
+            var container_no=$(this).val();
+           var request = $.ajax({
+              url: "{{route('check_container_number')}}",
+              method: "GET",
+              data: {container_number:container_no},
+            }); 
+            request.done(function( msg ) {
+                if(msg)
+                $('#container_exist').text('This container number already exist ! ');
+                else  $('#container_exist').text('');
+            });
+            request.fail(function( jqXHR, textStatus ) {
+                alert(textStatus)
+          });
+       });
+    });
+</script>
 @stop

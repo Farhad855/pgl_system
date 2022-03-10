@@ -1,4 +1,4 @@
-			<table class="table table-bordered">
+			<table class="table table-bordered" id="example">
 				<thead class="bg-info dataTable" id="table-2">
 					<tr>
 						<th width="5px;">#</th>
@@ -13,10 +13,14 @@
 						<td><?=$id++; ?></td>
                         <td>{{$company->name}}</td>
 	                   <td>
+                   		@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-customer']))
 	                   	<a href="#edit_company{{$company->id}}" class="btn btn-primary btn-circle" data-toggle="modal"><span class="fa fa-pencil"></span>
 	                   	</a>
+	                   	@endif
+	                   	@if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-customer']))
 	                   	<a  class="btn btn-warning btn-circle" onclick="javascript:return confirm('Are you sure you want to delete ?')" href="{{route('delete_company_admin',$company->id)}}"><span class="fa fa-trash"></span>
 	                   	</a>
+	                   	@endif
 	                   </td>
 					</tr>
 					<!-- Edit company modal -->

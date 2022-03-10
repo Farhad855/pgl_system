@@ -3,7 +3,9 @@
 					<thead class="bg-info thead-dark">
 						<tr>
 							<th>#</th>
+							@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-vehicle']))
 							<th class="column">Edit</th>
+							@endif
 							<th class="column">Photo</th>
 							<th class="column">Photo link</th>
 							<th>Hat No</th>
@@ -27,7 +29,9 @@
 							<th>Current status</th>
 							<th class="column">Con rep</th>
 							<th class="column">Auction inv</th>
+							@if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-vehicle']))
 							<th>Delete</th>
+							@endif
 						</tr>
 					</thead>
 				   <tbody >
@@ -37,10 +41,12 @@
 						?>
 						<tr id="searchBody">
 							<td>{{$id++}}</td>
+							@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-vehicle']))
 							<td class="column">
                             	<a href="{{url('edit_vehicle',$veh->id)}}" class="btn btn-info btn-circle waves-effect waves-light"><span class="fa fa-pencil"></span>
                             	</a>
                             </td>
+                            @endif
 							<td class="column">
                               <?php
                               $label='tag-info';
@@ -104,12 +110,13 @@
 								@endif
 							</td>
 							<td class="column">
-	                            @if($veh->file!="nothing uploaded")
-	                             <a  href="{{ route('auction_ivn_file.admin',$veh->file)}}" class="btn btn-success btn-circle" download="download"><i class="fa  fa-download"></i></a>
+	                           @if(strpos(@$veh->file,'http') === false)
+	                            <a href="javascript:;" class="btn btn-secondary btn-circle"><i class="fa  fa-link"></i></a>
 	                            @else
-                                 <a  href="javascript:;" class="btn btn-secondary btn-circle"><i class="fa  fa-download"></i></a>
+                                 <a target="_blank" href="{{$veh->file}}" class="btn btn-success btn-circle" download="download"><i class="fa  fa-link"></i></a>
                                 @endif
 							</td>
+							@if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-vehicle']))
 							<td>
 								@if(@$veh->carstate_id!='5')
 								<a onclick="javascript:return confirm('Are you sure you want to delete ?')" href="{{route('delete_vehicle_admin',$veh->id)}}" class="btn btn-warning btn-circle">
@@ -120,13 +127,16 @@
 								</button>
 								@endif
 							</td>
+							@endif
 						</tr>
 						@endforeach
 					</tbody>
 					<tfoot>
 						<tr class="bottom">
 							<th>#</th>
-							<th>Edit</th>
+							@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-vehicle']))
+							<th class="column">Edit</th>
+							@endif
 							<th class="column">Photo</th>
 							<th class="column">Photo link</th>
 							<th>Hat No</th>
@@ -150,7 +160,9 @@
 							<th>Current status</th>
 							<th class="column">Con rep</th>
 							<th class="column">Auction inv</th>
+							@if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-vehicle']))
 							<th>Delete</th>
+							@endif
 						</tr>
 					</tfoot>
 				 </table>

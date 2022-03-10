@@ -1,7 +1,13 @@
-			<table class="table table-bordered">
+			<table class="table table-bordered" id="example">
 				<thead class="bg-info">
 					<tr>
 						<th>#</th>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-vehicle']))
+						<th>Edit</th>
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-to-container']))
+						<th>Select</th>
+						@endif
 						<th>Photo</th>
 						<th>Photo link</th>
 						<th>Hat No</th>
@@ -21,7 +27,6 @@
                         <th>Value</th>
                         <th>Ship as </th>
 						<th>Point of loading</th>
-						<th>Edit status</th>
 					</tr>
 				</thead>
 				<tbody >
@@ -29,6 +34,17 @@
 					@foreach($vehicles as $veh)
 					<tr id="searchBody">
 						<td>{{$id++}}</td>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-vehicle']))
+						<td>
+                        	<a href="{{url('edit_vehicle',$veh->id)}}" class="btn btn-info btn-circle waves-effect waves-light"><span class="fa fa-pencil"></span>
+                        	</a>
+                        </td>
+                        @endif
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-to-container']))
+                        <td>
+                        	<input name="id" type="checkbox" class="checkbox" value="{{$veh->id}}" data-id="{{$veh->id}}"> 
+                        </td>
+                        @endif
 						<td >
                           <?php
                           $label='tag-info';
@@ -83,16 +99,21 @@
                             @endif
                         </td>
 						<td><span class="tag tag-success">{{@$veh->location}} </span></td>
-						<td><a href="" class="btn btn-warning btn-circle"><span class="fa fa-pencil"></span></a></td>
 					</tr>
 					@endforeach
 				</tbody>
 				<tfoot>
 					<tr>
 						<th>#</th>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-vehicle']))
+						<th>Edit</th>
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-to-container']))
+						<th>Select</th>
+						@endif
 						<th>Photo</th>
 						<th>Photo link</th>
-						<td>Hat No</td>
+						<th>Hat No</th>
 						<th>Key present</th>
 						<th>Vehicle Desc</th>
 						<th>Vin No</th>
@@ -109,7 +130,6 @@
                         <th>Value</th>
                         <th>Ship as </th>
 						<th>Point of loading</th>
-						<th>Edit status</th>
 					</tr>
 				</tfoot>
 			</table>

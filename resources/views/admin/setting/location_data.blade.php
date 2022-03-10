@@ -1,10 +1,14 @@
-<table class="table table-bordered">
+		<table class="table table-bordered" id="example">
 				<thead class="bg-info dataTable" id="table-2">
 					<tr>
 						<th width="2px;">#</th>
 						<th>Location Name</th>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-location']))
                         <th width="20px;">Edit</th>
+                        @endif
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-location']))
                         <th width="20px;">Delete</th>
+                        @endif
 					</tr>
 				</thead>
 				<tbody >
@@ -13,14 +17,18 @@
 					<tr id="searchBody">
 						<td><?=$id++; ?></td>
                         <td>{{$location->location}}</td>
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-location']))
 	                   <td>
 	                   	<a href="#edit_location{{$location->id}}" class="btn btn-primary btn-circle" data-toggle="modal"><span class="fa fa-pencil"></span>
 	                   	</a>
 	                   </td>
+	                   @endif
+	                   @if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-location']))
 	                   <td>
 	                   	<a  class="btn btn-warning btn-circle" onclick="javascript:return confirm('Are you sure you want to delete ?')" href="{{route('delete_location_admin',$location->id)}}"><span class="fa fa-trash"></span>
 	                   	</a>
 	                   </td>
+	                   @endif
 					</tr>
 					<!-- Edit location modal -->
 					<div class="modal fade small-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="edit_location{{$location->id}}">
@@ -55,8 +63,12 @@
 					<tr>
 						<th width="2px;">#</th>
 						<th>Location Name</th>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-location']))
                         <th width="20px;">Edit</th>
+                        @endif
+                        @if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-location']))
                         <th width="20px;">Delete</th>
+                        @endif
 					</tr>
 				</tfoot>
 			</table>

@@ -242,12 +242,14 @@
 @section('js')
 <script type="text/javascript">
     $(document).ready(function(){
-        // $(".vehicles").addClass('active');
-        // print section
          $('#print').click(function(){
-            $(this).addClass('hide');
+            $('.no-print').css('visibility','visible');
             $(".love").css("margin-top","-100px");
             window.print(); 
+            setTimeout(function(){
+                $(".love").css("margin-top","0px");
+                $('.no-print').css('visibility','visible');
+            },50);
         });
     })
 </script>
@@ -258,7 +260,7 @@
     <div class="container-fluid"> 
     <div class="love condition_report " >
         <div class="top_processes ui-state-highlight">
-            <button type="button" class="btn btn-info btn-rounded" id="print"><i class="fa fa-print"></i>&nbsp;Print</button>&nbsp;
+            <button type="button" class="btn btn-info btn-rounded no-print" id="print"><i class="fa fa-print"></i>&nbsp;Print</button>&nbsp;
         </div>
         <input type="hidden" name="id" value="{{isset($signle_vehicle)? $signle_vehicle->id : ''}}">
         <div class="cond_here">

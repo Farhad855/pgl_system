@@ -12,9 +12,9 @@
 			 <button type="button" class="excel btn btn-outline-info mb-0-25 waves-effect waves-light">
 				<i class="fa fa-file-excel-o"></i>
 			</button>
-			<button type="button" class="pdf btn btn-outline-warning btn  mb-0-25 waves-effect waves-light">
+			<!-- <button type="button" class="pdf btn btn-outline-warning btn  mb-0-25 waves-effect waves-light">
 				<i class="fa fa-file-pdf-o"></i>
-			</button>
+			</button> -->
 		   </div>
 		   <div class="form-group col-md-1 col-lg-1 col-sm-2 col-xs-12" style="margin:1%;float: right;">
 		   		<select class="form-control" id="showEntry">

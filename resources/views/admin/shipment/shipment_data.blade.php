@@ -1,10 +1,14 @@
-			<table class="table table-bordered">
+			<table class="table table-bordered" id="example">
 				<thead class="bg-info">
 					<tr>
 						<th>#</th>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-shipment']))
 						<th>Edit</th>
+						@endif
 						@if($status !='10')
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-status']))
 						<th>Select</th>
+						@endif
 						@endif
 						<th>BOL</th>
 						<th>DR</th>
@@ -34,8 +38,12 @@
 						<th>Vessel name</th>
 						@endif
 						@if($status==10)
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-shipment']))
 						<th>Delete</th>
-						<th>Duplicate</th>	
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-shipment']))
+						<th>Duplicate</th>
+						@endif	
 						@endif
 					</tr>
 				</thead>
@@ -44,14 +52,18 @@
 					@foreach($shipments as $item)
 					<tr id="searchBody">
 						<td><?=$id++; ?></td>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-shipment']))
                             <td>
                             	<a href="{{route('edit_shipment',$item->id)}}" class="btn btn-info btn-circle waves-effect waves-light"><span class="fa fa-pencil"></span>
                             	</a>
                             </td>
+                            @endif
                             @if($status !='10')
+                            @if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-status']))
 							<td> 
 								<input type="checkbox" class="checkbox" data-id={{$item->id}}"> 
 							</td>
+							@endif
 							@endif
                             <td>
                             	<a target="_blank" href="{{route('bol_admin',$item->id)}}">BOL</a>
@@ -95,8 +107,8 @@
                                 <?php } ?>
                             </td>
                             <td>{{$item->loading_date}}</td>
-                            <td>{{$item->etd_port_loading}}</td>
-                            <td>{{$item->eta_port_discharge}}</td>
+                            <td><a href="#etd{{$item->id}}" data-toggle="modal" id="td{{$item->id}}">{{$item->etd_port_loading}}</a></td>
+                             <td><a href="#eta{{$item->id}}" data-toggle="modal" id="tda{{$item->id}}">{{$item->eta_port_discharge}}</td>
                             <td>{{$item->inv_number}}</td>
 							<td>{{$item->amount}}</td>
 							@if($status==1)
@@ -110,6 +122,7 @@
                             <td>{{$item->vessel_name}}</td>
                             @endif
                             @if($status==10)
+                            @if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-shipment']))
                             <td>
                             	@if (DB::table('tbl_bases')->where('container_id', '=', $item->id)->exists())
                             	<a  onclick="javascript: return alert('This Shipment can not be deleted,because it is an active shipment!')" class="btn btn-secondary btn-circle waves-effect waves-light"><span class="fa fa-trash"></span></a>
@@ -118,21 +131,28 @@
                             	@endif
 
                             </td>
+                            @endif
+                            @if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-shipment']))
                             <td>
                             	<a href="{{route('duplicate_shipment',$item->id)}}" class="btn btn-info btn-rounded">Duplicate</a>
                             </td>
                             @endif
-
-                            
+                            @endif   
 					</tr>
+					@include('admin.shipment.eta')
+					@include('admin.shipment.etd')
 					@endforeach
 				</tbody>
 				<tfoot>
 					<tr>
 						<th>#</th>
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-shipment']))
 						<th>Edit</th>
+						@endif
 						@if($status !='10')
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-status']))
 						<th>Select</th>
+						@endif
 						@endif
 						<th>BOL</th>
 						<th>DR</th>
@@ -162,8 +182,12 @@
 						<th>Vessel name</th>
 						@endif
 						@if($status==10)
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','delete-shipment']))
 						<th>Delete</th>
-						<th>Duplicate</th>	
+						@endif
+						@if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-shipment']))
+						<th>Duplicate</th>
+						@endif	
 						@endif
 					</tr>
 				</tfoot>

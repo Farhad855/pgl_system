@@ -1,4 +1,4 @@
-			<table class="table table-bordered">
+			<table class="table table-bordered" id="example">
 				<thead class="bg-info">
 					<tr>
 						<th width="1%">#</th>
@@ -29,8 +29,20 @@
                         $t_total_on_hand=0;
                         $t_shipped=0;
                         $t_all_total=0;
+
+                        $check=0;
 					 ?>
 					@foreach($customers as $item)
+                    @if(@$filter)
+                    <?php  
+                        $check=DB::table('vehicles')
+                            ->where(['company_id'=>$item->id])
+                            ->whereIn('carstate_id',[1,2,3,6])
+                            ->count(); 
+                            if($check <= 0) {continue;} 
+
+                        ?> 
+                    @endif   
 					<tr id="searchBody">
 						<td>{{$id++}}</td>
 						<td style="text-align: left;">{{$item->name}}</td>

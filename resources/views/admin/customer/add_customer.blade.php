@@ -29,18 +29,6 @@
                                   @endforeach
                                 </select>
                             </div>
-                            <div class="form-group row">
-                                    <label for="select2-demo-1" class="col-sm-4 form-control-label">Single select box</label>
-                                    <div class="col-sm-6">
-                                        <select id="select2-demo-1" class="form-control" data-plugin="select2">
-                                            <option value="option1">HTML</option>
-                                            <option value="option2">CSS</option>
-                                            <option value="option3">Javascript</option>
-                                            <option value="option4">PHP</option>
-                                            <option value="option5">Bootstrap</option>
-                                        </select>
-                                    </div>
-                                </div>
                             <div class="form-group">
                                 <label for="address">Company Street Address*</label>
                                 <input type="text" name="address" id="address" class="form-control" placeholder="customer address" />
@@ -197,8 +185,11 @@
                         </div>
 				 </div>
 				<div class="modal-footer">
-					<button type="submit" class="btn btn-primary">Add</button>
-					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-info btn-rounded label-left float-xs-left">
+                        <span class="btn-label"><i class="ti-save"></i></span>
+                        Save
+                    </button>
+					<button type="button" class="btn btn-danger btn-rounded" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</form>

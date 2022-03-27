@@ -1,4 +1,3 @@
-
 				<table class="table table-bordered" id="example">
 					<thead class="bg-info thead-dark">
 						<tr>
@@ -137,7 +136,7 @@
 							@if(Auth::guard('admin')->user()->hasPermissions(['Admin','edit-vehicle']))
 							<th class="column">Edit</th>
 							@endif
-							<th class="column">Photo</th>
+							<!-- <th class="column">Photo</th> -->
 							<th class="column">Photo link</th>
 							<th>Hat No</th>
 							<th>Key present</th>
@@ -165,14 +164,13 @@
 							@endif
 						</tr>
 					</tfoot>
-				 </table>
+				</table>
+				
 				 @if(!empty($vehicles))
-					{{ $vehicles->links()}}
-					@endif
-				</div>
-	</div>
-	</div>
+				{{ $vehicles->appends(Request::All())->links()}}
+				@endif
 		
+			 
 
 				
 

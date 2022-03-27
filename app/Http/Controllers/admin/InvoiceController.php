@@ -17,23 +17,27 @@ class InvoiceController extends Controller
         $this->invoice=$invoice;
     }
     
-    public function view_invoice($status='')
+    public function view_invoice($status='',Request $request)
     {
          if(!auth()->guard('admin')->user()->hasPermissions(['Admin','invoices-management']))
             return view('admin.error.403');
-
+        $state=$status;
         if($status==5){
-            $status='';
+            $state='';
+        }
+        $paginate=20;
+        if($request['paginate']){
+          $paginate= $request['paginate'];
         }
         $invoice=DB::table('pgl_invoices')->select('pgl_invoices.*','pgl_invoices.id as id','containers.container_number as container_number','companies.name as company_name')
         ->join('companies','pgl_invoices.company_id','companies.id')
         ->join('containers','containers.id','pgl_invoices.container_id')
         ->orderBy('pgl_invoices.id','desc');
            if($status !=''){
-           $invoice->where('pgl_invoices.status',$status);
+           $invoice->where('pgl_invoices.status',$state);
             } 
-          $invoices=$invoice->paginate(20);
-           return view('admin.invoice.invoice',['invoices'=>$invoices,'paginate'=>20,'status'=>$status]);       
+          $invoices=$invoice->paginate($paginate);
+           return view('admin.invoice.invoice',['invoices'=>$invoices,'paginate'=>$paginate,'status'=>$status]);       
     }
 
     public function search_invoice(Request $request)

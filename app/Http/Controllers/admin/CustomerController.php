@@ -321,7 +321,7 @@ class CustomerController extends Controller
       $customers=DB::table('customers')->select('id','customer_name')->where('company_id',$request['company_id'])->first();
       
         $data="<option value='$customers->id'>".$customers->customer_name.="</option>";
-       echo ($data);
+        echo $data;
     }
 
     function delete_customer($id='')

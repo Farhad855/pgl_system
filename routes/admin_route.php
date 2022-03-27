@@ -164,6 +164,13 @@ Route::get('/check_container_number','admin\ShipmentController@check_container_n
 Route::get('update_etd_date','admin\ShipmentController@update_etd_date');
 Route::get('update_eta_date','admin\ShipmentController@update_eta_date');
 
+// title archive shipment from savannah with status on loading 
+Route::get('/archive_shipment_admin','admin\ShipmentController@archive_shipment')->name('archive_shipment_admin');
+Route::get('/archive_shipment_data_admin','admin\ShipmentController@archive_shipment_data')->name('archive_shipment_data_admin');
+Route::get('/search_archive_shipment','admin\ShipmentController@search_archive_shipment')->name('search_archive_shipment_admin');
+Route::get('/paginate_archive_shipment','admin\ShipmentController@paginate_archive_shipment')->name('paginate_archive_shipment_admin');
+Route::post('/add_archive_shipment','admin\ShipmentController@add_archive_shipment')->name('add_archive_shipment');
+
 // Invoices section 
 Route::get('/invoice_admin/{id}','admin\InvoiceController@view_invoice')->name('invoice_admin');
 Route::get('/invoice_data_admin','admin\InvoiceController@invoice_data')->name('invoice_data_customer');

@@ -458,6 +458,15 @@ private static $installed = array (
         0 => '*',
       ),
     ),
+    'kyslik/column-sortable' => 
+    array (
+      'pretty_version' => '6.4.2',
+      'version' => '6.4.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '91792a166dd02aaaeb7928417bb49d808b0c58ea',
+    ),
     'laravel/framework' => 
     array (
       'pretty_version' => 'v7.30.6',

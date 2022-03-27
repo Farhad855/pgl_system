@@ -28,8 +28,12 @@ class VehicleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function all_vehicles()
+    public function all_vehicles(Request $request)
     {
+        $paginate=20;
+        if($request['paginate']){
+          $paginate= $request['paginate'];
+        }
          $vehicles=DB::table('vehicles')
          ->select(
             "vehicles.id","vehicles.link",
@@ -65,8 +69,8 @@ class VehicleController extends Controller
         ->join('carstates','carstates.id','=','vehicles.carstate_id')
         ->join('companies','companies.id','=','vehicles.company_id')    
         ->orderBy('vehicles.id','desc')
-        ->paginate(20);
-         return view('admin.vehicle.all_vehicles',['vehicles'=>$vehicles,'paginate'=>20]);
+        ->paginate($paginate);
+         return view('admin.vehicle.all_vehicles',['vehicles'=>$vehicles,'paginate'=>$paginate]);
 
     }
     public function search_all_vehicle(Request $request)
@@ -230,13 +234,17 @@ class VehicleController extends Controller
         ->join('companies','companies.id','=','vehicles.company_id')
         ->orderBy('vehicles.id','desc')
         ->paginate($paginate); 
-        return view('admin.vehicle.all_vehicles_data',compact('vehicles','paginate'))->render();
+        return view('admin.vehicle.all_vehicles',compact('vehicles','paginate'))->render();
       }
     }
 
 // on the way vehicle section 
-    public function on_theway_vehicles()
+    public function on_theway_vehicles(Request $request)
     {
+        $paginate=20;
+        if($request['paginate']){
+          $paginate= $request['paginate'];
+        }
          $vehicles=DB::table('vehicles')
          ->select(
             "vehicles.id",
@@ -274,8 +282,8 @@ class VehicleController extends Controller
         ->join('companies','companies.id','=','vehicles.company_id')    
         ->where('carstates.id',1)
         ->orderBy('vehicles.id','desc')
-        ->paginate(20);
-         return view('admin.vehicle.on_theway_vehicles',['vehicles'=>$vehicles,'paginate'=>20]);
+        ->paginate($paginate);
+         return view('admin.vehicle.on_theway_vehicles',['vehicles'=>$vehicles,'paginate'=>$paginate]);
 
     }
     public function search_on_theway_vehicle(Request $request)
@@ -430,8 +438,12 @@ class VehicleController extends Controller
     }
 
     // pending vehicle section 
-    public function pending_vehicles()
+    public function pending_vehicles(Request $request)
     {
+        $paginate=20;
+        if($request['paginate']){
+          $paginate= $request['paginate'];
+        }
          $vehicles=DB::table('tbl_bases')
          ->select("vehicles.*","tbl_bases.vehicle_id","tbl_bases.container_id","containers.container_number","containers.booking_number","containers.eta_port_discharge","containers.etd_port_loading","locations.location","carstates.type","companies.name as company_name")
         ->rightJoin('vehicles','vehicles.id','=','tbl_bases.vehicle_id')
@@ -441,8 +453,8 @@ class VehicleController extends Controller
         ->join('companies','companies.id','=','vehicles.company_id')
         ->where('carstates.id',6)
         ->orderBy('vehicles.id','desc')
-        ->paginate(20);
-         return view('admin.vehicle.pending_vehicles',['vehicles'=>$vehicles,'paginate'=>20]);
+        ->paginate($paginate);
+         return view('admin.vehicle.pending_vehicles',['vehicles'=>$vehicles,'paginate'=>$paginate]);
 
     }
     public function search_pending_vehicle(Request $request)
@@ -514,8 +526,12 @@ class VehicleController extends Controller
     }
 
 // On hand  no title  vehicle section 
-    public function onhand_notitle_vehicles()
+    public function onhand_notitle_vehicles(Request $request)
     {
+        $paginate=20;
+        if($request['paginate']){
+          $paginate= $request['paginate'];
+        }
          $vehicles=DB::table('vehicles')
          ->select(
             "vehicles.id","vehicles.link",
@@ -550,8 +566,8 @@ class VehicleController extends Controller
         ->join('companies','companies.id','=','vehicles.company_id') 
         ->where('carstates.id',2)
         ->orderBy('vehicles.id','desc')
-        ->paginate(20);
-         return view('admin.vehicle.onhand_notitle_vehicles',['vehicles'=>$vehicles,'paginate'=>20]);
+        ->paginate($paginate);
+         return view('admin.vehicle.onhand_notitle_vehicles',['vehicles'=>$vehicles,'paginate'=>$paginate]);
 
     }
     public function search_onhand_notitle_vehicle(Request $request)
@@ -697,8 +713,12 @@ class VehicleController extends Controller
     }
 
     // On hand  with title  vehicle section 
-    public function onhand_withtitle_vehicles()
+    public function onhand_withtitle_vehicles(Request $request)
     {
+        $paginate=20;
+        if($request['paginate']){
+          $paginate= $request['paginate'];
+        }
          $vehicles=DB::table('vehicles')
          ->select(
             "vehicles.id","vehicles.link",
@@ -737,8 +757,8 @@ class VehicleController extends Controller
         ->join('companies','companies.id','=','vehicles.company_id') 
         ->where('carstates.id',3)
         ->orderBy('vehicles.id','desc')
-        ->paginate(20);
-         return view('admin.vehicle.onhand_withtitle_vehicles',['vehicles'=>$vehicles,'paginate'=>20]);
+        ->paginate($paginate);
+         return view('admin.vehicle.onhand_withtitle_vehicles',['vehicles'=>$vehicles,'paginate'=>$paginate]);
 
     }
     public function search_onhand_withtitle_vehicle(Request $request)
@@ -897,8 +917,12 @@ class VehicleController extends Controller
     }
 
         // shipped vehicle section 
-    public function shipped_vehicles()
+    public function shipped_vehicles(Request $request)
     {
+        $paginate=20;
+        if($request['paginate']){
+          $paginate= $request['paginate'];
+        }
          $vehicles=DB::table('tbl_bases')
          ->select("vehicles.id","vehicles.link","vehicles.year","vehicles.make","vehicles.model","vehicles.color","vehicles.vin","vehicles.deliver_date","vehicles.shipas","vehicles.is_key","vehicles.lot_number","vehicles.c_remark",
             "vehicles.dport",
@@ -910,8 +934,8 @@ class VehicleController extends Controller
         ->join('companies','companies.id','=','vehicles.company_id')
         ->where('carstates.id',5)
         ->orderBy('vehicles.id','desc')
-        ->paginate(20);
-         return view('admin.vehicle.shipped_vehicles',['vehicles'=>$vehicles,'paginate'=>20]);
+        ->paginate($paginate);
+         return view('admin.vehicle.shipped_vehicles',['vehicles'=>$vehicles,'paginate'=>$paginate]);
 
     }
     public function search_shipped_vehicle(Request $request)
@@ -1531,7 +1555,7 @@ class VehicleController extends Controller
              ->rightJoin('companies','companies.id','=','customers.company_id')
              ->groupBy('companies.id')
              ->get();
-            return view('admin.vehicle.vehicle_summary_data')
+            return view('admin.vehicle.vehicle_summary')
             ->with(['customers' => $customers,'locations'=>$locations,'location'=>$location_id,'filter'=>'filter']);
         }
 
@@ -1546,7 +1570,7 @@ class VehicleController extends Controller
              ->rightJoin('companies','companies.id','=','customers.company_id')
              ->groupBy('companies.id')
              ->get();
-            return view('admin.vehicle.vehicle_summary_data')
+            return view('admin.vehicle.vehicle_summary')
             ->with(['customers' => $customers,'locations'=>$locations,'location'=>0]);
            }
            else{
@@ -1555,7 +1579,7 @@ class VehicleController extends Controller
              ->rightJoin('companies','companies.id','=','customers.company_id')
              ->groupBy('companies.id')
              ->get();
-            return view('admin.vehicle.vehicle_summary_data')
+            return view('admin.vehicle.vehicle_summary')
             ->with(['customers' => $customers,'locations'=>$locations,'location'=>$location_id]);
             }
         }
@@ -1567,12 +1591,17 @@ class VehicleController extends Controller
              ->groupBy('companies.id')
              ->get();
             return view('admin.vehicle.'.$view)
-            ->with(['customers' => $customers,'locations'=>$locations,'location'=>$location_id]);
+            ->with(['customers' => $customers,'locations'=>$locations,'location'=>$location_id,'filter'=>'filter']);
         }
 
      }
      public function vehicle_summary_search($company_id='',$status='',$location_id='')
-     {  
+     { 
+
+        $view='vehicle_summary_search'; 
+        if($status=='3'){
+            $view="onhand_withtitle_vehicles";
+        }
         $vehicle=DB::table('vehicles')
          ->select(
             "vehicles.id","vehicles.link",
@@ -1595,6 +1624,9 @@ class VehicleController extends Controller
                   "vehicles.htnumber",  
                   "vehicles.title_number",
                   "vehicles.title_state",
+                  "vehicles.weight",
+                  "vehicles.vehicle_price",
+                  "vehicles.shipas",
                   "locations.location",
                   "carstates.type",
                   "companies.name"
@@ -1623,7 +1655,7 @@ class VehicleController extends Controller
             $vehicle->where(['vehicles.company_id'=>$company_id,'vehicles.carstate_id'=> $status,'vehicles.location_id'=>$location_id]) ; 
         }
         $vehicles=$vehicle->paginate(100);
-         return view('admin.vehicle.vehicle_summary_search',['vehicles'=>$vehicles,'paginate'=>20]);
+         return view('admin.vehicle.'.$view,['vehicles'=>$vehicles,'paginate'=>20]);
 
      }
 
@@ -1638,11 +1670,12 @@ class VehicleController extends Controller
      // inserting vehicle  
      public function add_new_vehicle(Request $request)
      {
+        $email='';
         $result=DB::table('vehicles')->where('vin',$request['vin'])->exists();
         if($result){
              return redirect()->back()->with('success', 'The vin number : '.$request['vin'].' already exists! ');
         }
-        else {  
+        else {
             $this->validate($request, ['ploading' => 'required']);
             $add_vehicle = new VehicleModel();
             $add_vehicle->customer_id = $request['customer'];
@@ -1766,13 +1799,15 @@ class VehicleController extends Controller
             $add_vehicle->user_id = Auth::guard('admin')->id();
             $add_vehicle->save();
             $data = $request->all();
-            Mail::send('emails.first', $data, function ($message)  {
+            $email = DB::table('customers')->where('id',$request['customer'])->first()->email;        
+            Mail::send('admin.emails.first', $data, function ($message) use ($email) {
              $message->from('info@peacegl.com', 'Peace Global Logistics');
-             $message->to(Input::get('email'))->subject('STATUS -  ' . Input::get('year') . Input::get('make') . Input::get('model') . Input::get('color') . ' With  VIN#  ' . Input::get('vin') . '  ON THEY WAY To PGL');
+              $message->to($email)->subject('STATUS -  ' . request()->input('year') . request()->input('make') . request()->input('model') . request()->input('color') . ' With  VIN#  ' . request()->input('vin') . '  ON THEY WAY To PGL');
             });
             return redirect()->route('all_vehicle_admin')->with('success', 'saved!');
         }
      }
+
      // show vehicle for update
      public function edit_vehicle($id='')
      {
@@ -2006,8 +2041,12 @@ class VehicleController extends Controller
             return view('admin.error.403');
 
         $data = $request->all();
-        $id=$request['id'];
+        $ids=$request['id'];
+        $id='';
         $rcontainer=DB::table('containers')->where('id',$data['container'])->first();
+        foreach($ids as $key => $value){
+           $id=$value;
+
         if (!empty($id)) {
             $data_check = DB::table('tbl_bases')->where('vehicle_id', $id)->first();
             if ($data_check) {
@@ -2038,8 +2077,10 @@ class VehicleController extends Controller
 
                 return redirect()->back()->with('success','Successfully added to container');
             }
-        }
+         }
+        
          return redirect()->back()->with('error','Please select a vehicle !');
+        }
 
     }
 

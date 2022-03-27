@@ -289,6 +289,9 @@ function shipment_summary(){
         $arrivedshipment= DB::table('containers')
                 ->where('status',2)
                 ->count();
+        $title_archive = DB::table('containers')
+                ->where('port_loading','like', '%'.'Savannah'.'%')
+                ->count(); 
         $all_shipment = DB::table('containers')->count();
               
 
@@ -327,6 +330,7 @@ function shipment_summary(){
             'submitsishipment'=>$submitsishipment,
             'onthewayshipment'=>$onthewayshipment,
             'arrivedshipment'=>$arrivedshipment,
+            'titlearchiveshipment'=>$title_archive,
 
             'allinvoice'=>$allinvoice,
             'openinvoice'=>$openinvoice,

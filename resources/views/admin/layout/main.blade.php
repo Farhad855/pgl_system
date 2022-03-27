@@ -182,9 +182,15 @@
 									   </li>
 									</ul>
 								</li>
-								<li><a href="{{route('shipment_admin',['9','10'])}}">Submit Si <span class="tag tag-warning t_submitsi_ship" style="float:right;">0</span></a></li>
+								<li><a href="{{route('shipment_admin',['9','10'])}}">Submit Si <span class="tag tag-warning t_submitsi_ship" style="float:right;">0</span></a>
+								</li>
 								<li><a href="{{route('shipment_admin',['1','10'])}}">On the way <span class="tag tag-warning t_on_the_way_ship" style="float:right;">0</span> </a></li>
 								<li><a href="{{route('shipment_admin',['2','10'])}}">Arrived <span class="tag tag-warning t_arrived_ship" style="float:right;">0</span></a>
+								</li>
+								<li>
+				                	<a href="{{route('archive_shipment_admin')}}">Title Archive
+				                		<span class="tag tag-warning t_archive_ship" style="float:right;">0</span>
+				                	</a>
 								</li>
 								<li>
 									<a href="{{route('shipment_summary')}}">Summary</a>
@@ -367,7 +373,6 @@
 					</div>
 				</nav>
 			</div>
-
 			@yield('content')
 
 		</div>
@@ -431,6 +436,8 @@
 	            	$('.t_submitsi_ship').text(msg.submitsishipment);
 	            	$('.t_on_the_way_ship').text(msg.onthewayshipment);
 	            	$('.t_arrived_ship').text(msg.arrivedshipment);
+	            	$('.t_archive_ship').text(msg.titlearchiveshipment);
+
 
 	            	$('.t_all_inv').text(msg.allinvoice);
 	            	$('.t_open_inv').text(msg.openinvoice);
@@ -461,7 +468,7 @@
 		</script>
 		<script>
 			$(document).ready(function(){
-				$('#example th').each(function (col) {
+				$('#user_data th').each(function (col) {
             $(this).hover(
                     function () {
                         $(this).addClass('focus');
@@ -499,7 +506,7 @@
 	       $('.excel').click(function(){
 		       $("#example").tableHTMLExport({
 				  type:'csv',
-				  filename:'sample.csv',
+				  filename:'Excel_sheet.csv',
 				  separator: ',',
 				  newline: '\r\n',
 				  trimContent: true,

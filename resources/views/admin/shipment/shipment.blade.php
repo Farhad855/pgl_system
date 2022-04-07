@@ -14,10 +14,14 @@
 	<div class="container-fluid"> 
 		<div class=" bg-white table-responsive">
 			<div class="form-group col-md-3 col-lg-3 col-sm-6 col-xs-12" style="margin:1%">
-			 <div class="input-group">
-    			<span class="input-group-addon"><i class="ti ti-reload text text-warning search_reload"></i></span>
-    			<input type="text" name="search" class="form-control b-a" placeholder="Search for ..." id="search">
-  			</div>
+				<form action="{{route('search_shipment_admin')}}" id="search_shipment">
+					  <input type="hidden" name="status" value="{{$status}}">
+		   			<input type="hidden" name="locations" value="{{$location}}">
+				 <div class="input-group">
+	    			<span class="input-group-addon"><i class="ti ti-reload text text-warning search_reload"></i></span>
+	    			<input type="text" name="searchValue" class="form-control b-a" placeholder="Search for ..." id="search">
+	  			</div>
+	  		 </form>
 		   </div>
 		   @if($status !='10')
 		   @if(Auth::guard('admin')->user()->hasPermissions(['Admin','add-status']))
@@ -32,6 +36,22 @@
 					<i class="fa fa-file-excel-o"></i>
 				</button>
 		   </div>
+		    @if($status=='10')
+		   <div class="col-md-2 col-lg-2">
+		   	<!--Shipid.com Tracking Form start-->
+					<div id="shipid_tf"></div>
+					<script type="text/javascript"><!--
+					shipid_tf_box        = 2;
+					shipid_tf_box_width  = "";
+					shipid_tf_theme      = "orange";
+					shipid_tf_text1      = "Container #:";
+					shipid_tf_text2      = "Track";
+					shipid_tf_text_color = "#FFFFFF";
+					//-->
+					</script><script type="text/javascript" src="http://www.shipid.com/script/tracking_form.js"></script>
+					<!--Shipid.com Tracking Form end-->
+		   </div>
+		   @endif
 		   <div class="form-group col-md-1 col-lg-1 col-sm-2 col-xs-12" style="margin:1%;float: right;">
 		   		<form action="{{route('shipment_admin',[$status,$location])}}" id="showEntryForm">
 		   			<input type="hidden" name="status" value="{{$status}}">
@@ -51,6 +71,7 @@
 		   <div class="col-md-2 col-lg-2 col-sm-6 col-xs-12 text-right" style="margin-top:1.5%;float: right;text-align: right;">
 		   	<a href="#" class="text text-warning"><b>{{$page_title}}</b></a>
 		   </div>
+
 	<div class="site" id="user_data">
 		@include('admin.shipment.shipment_data')
 	</div>
@@ -90,30 +111,6 @@
 	            });
 	          }
        
-
-       // search section 
-       $('#search').on('keyup',function(e){
-	   		var searchData = $(this).val();
-	   		if(searchData.length <=3){
-	   			return false ;
-	   		}
-	   		 searchVehicle(searchData);
-	   	 function searchVehicle(searchData){
-	      	$('#searchBody').html("<div style='position:fixed; margin-top:7%; margin-left:40%;'><img width='70px' src= '"+"{{asset('img/loading.gif')}}"+"' alt='Loading ...'> </div> ");
-		       var request = $.ajax({
-	              url: "{{route('search_shipment_admin')}}",
-	              method: "GET",
-	              data: {searchValue:searchData,status:"{{@$status}}",locations:"{{@$location}}"},
-	            }); 
-	            request.done(function( msg ) {
-	                $('#user_data').html(msg);
-	            });
-	            request.fail(function( jqXHR, textStatus ) {
-	            	$('#user_data').append(textStatus);
-	            });
-	          }
-        });
-
        	// show entry section
        $('#showEntry').change(function(){
        		$('#searchBody').html("<div style='position:fixed; margin-top:7%; margin-left:40%;'><img width='70px' src= '"+"{{asset('img/loading.gif')}}"+"' alt='Loading ...'> </div> ");
